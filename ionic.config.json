@@ -1,0 +1,7 @@
+{
+  "name": "nhb-app-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
