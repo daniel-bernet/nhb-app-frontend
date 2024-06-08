@@ -5,8 +5,7 @@ import {
   IonContent,
   IonHeader,
   IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
+  IonToolbar, IonInput, IonButton, IonLabel } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from "../explore-container/explore-container.component";
 
 @Component({
@@ -14,7 +13,7 @@ import { ExploreContainerComponent } from "../explore-container/explore-containe
     templateUrl: './register.page.html',
     styleUrls: ['./register.page.scss'],
     standalone: true,
-    imports: [
+    imports: [IonLabel, IonButton, IonInput, 
         IonContent,
         IonHeader,
         IonTitle,

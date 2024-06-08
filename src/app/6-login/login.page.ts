@@ -5,25 +5,30 @@ import {
   IonContent,
   IonHeader,
   IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from "../explore-container/explore-container.component";
+  IonLabel,
+  IonInput,
+  IonButton, IonItem, IonCard, IonNavLink } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { RegisterPage } from '../7-register/register.page';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.page.html',
-    styleUrls: ['./login.page.scss'],
-    standalone: true,
-    imports: [
-        IonContent,
-        IonHeader,
-        IonTitle,
-        IonToolbar,
-        CommonModule,
-        FormsModule,
-        ExploreContainerComponent
-    ]
+  selector: 'app-login',
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
+  standalone: true,
+  imports: [IonNavLink, IonCard, IonItem, 
+    IonButton,
+    IonInput,
+    IonLabel,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    CommonModule,
+    FormsModule,
+  ],
 })
 export class LoginPage {
-  constructor() {}
+  registerPage = RegisterPage;  
+
+  constructor(private router: Router) {}
 }

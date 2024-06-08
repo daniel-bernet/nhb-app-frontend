@@ -1,9 +1,55 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Register </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <app-explore-container name="Community page"></app-explore-container>
+  <ion-title>NHB-APP</ion-title>
+
+  <div class="auth-container">
+    <ion-header>Register</ion-header>
+    <ion-input
+      label="First Name"
+      label-placement="floating"
+      fill="outline"
+      placeholder="Your First Name"
+      autocapitalize="words"
+      required="true"
+    ></ion-input>
+    <ion-input
+      label="Last Name"
+      label-placement="floating"
+      fill="outline"
+      placeholder="Your Last Name"
+      autocapitalize="words"
+      required="true"
+    ></ion-input>
+    <ion-input
+      label="Email"
+      label-placement="floating"
+      fill="outline"
+      placeholder="your@email.com"
+      type="email"
+      inputmode="email"
+      required="true"
+    ></ion-input>
+    <ion-input
+      label="Password"
+      label-placement="floating"
+      fill="outline"
+      placeholder="password"
+      type="password"
+      required="true"
+    ></ion-input>
+    <ion-input
+      label="Confirm Password"
+      label-placement="floating"
+      fill="outline"
+      placeholder="password"
+      type="password"
+      required="true"
+    ></ion-input>
+    <ion-button (click)="null">
+      <ion-label>Register</ion-label>
+    </ion-button>
+  </div>
+  <div>
+    <span>Already have an account?</span>
+    <span>Login</span>
+  </div>
 </ion-content>

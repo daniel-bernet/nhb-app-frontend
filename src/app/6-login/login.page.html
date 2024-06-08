@@ -1,9 +1,26 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Login </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <app-explore-container name="Login page"></app-explore-container>
+  <ion-title>NHB-APP</ion-title>
+
+  <div class="auth-container">
+    <ion-header>Login</ion-header>
+    <ion-input
+      label="Email"
+      label-placement="floating"
+      fill="outline"
+      placeholder="your@email.com"
+    ></ion-input>
+    <ion-input
+      label="Password"
+      label-placement="floating"
+      fill="outline"
+      placeholder="password"
+    ></ion-input>
+    <ion-button (click)="null">
+      <ion-label>Login</ion-label>
+    </ion-button>
+  </div>
+  <div>
+    <span>Don't have an account yet?</span>
+    <span>Sign up</span>
+  </div>
 </ion-content>
