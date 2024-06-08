@@ -4,8 +4,13 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonIcon,
+  IonButtons,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { addIcons } from 'ionicons';
+import { menuOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-calendar',
@@ -13,6 +18,10 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   styleUrls: ['calendar.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
+    IonButtons,
+    IonIcon,
+
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -21,5 +30,12 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   ],
 })
 export class CalendarPage {
-  constructor() {}
+  calendarActionSheet() {
+    console.log('clicked');
+  }
+  constructor() {
+    addIcons({
+      menuOutline,
+    });
+  }
 }

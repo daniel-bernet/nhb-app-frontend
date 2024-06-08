@@ -1,9 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title> Calendar </ion-title>
+    <ion-button fill="clear" slot="end" (click)="calendarActionSheet()">
+      <ion-icon size="large" aria-hidden="true" name="menu-outline"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" id="calendar">
   <app-explore-container name="Calendar page"></app-explore-container>
 </ion-content>

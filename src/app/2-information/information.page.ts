@@ -4,8 +4,12 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonIcon,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { addIcons } from 'ionicons';
+import { menuOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-information',
@@ -13,6 +17,9 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   styleUrls: ['information.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
+    IonIcon,
+
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -21,5 +28,12 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   ],
 })
 export class InformationPage {
-  constructor() {}
+  informationActionSheet() {
+    console.log('clicked');
+  }
+  constructor() {
+    addIcons({
+      menuOutline,
+    });
+  }
 }

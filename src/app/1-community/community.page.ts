@@ -4,8 +4,22 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonLabel,
+  IonItemDivider,
+  IonItemGroup,
+  IonItem,
+  IonList,
+  IonIcon,
+  IonTabButton,
+  IonButton,
+  IonButtons,
+  IonActionSheet,
+  IonFab,
+  IonFabButton,
+  IonFabList,
 } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { addIcons } from 'ionicons';
+import { add, peopleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-community',
@@ -13,13 +27,33 @@ import { ExploreContainerComponent } from '../explore-container/explore-containe
   styleUrls: ['community.page.scss'],
   standalone: true,
   imports: [
+    IonFabList,
+    IonFabButton,
+    IonFab,
+    IonActionSheet,
+    IonButtons,
+    IonButton,
+    IonTabButton,
+    IonIcon,
+    IonList,
+    IonItem,
+    IonItemGroup,
+    IonItemDivider,
+    IonLabel,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    ExploreContainerComponent,
   ],
 })
 export class CommunityPage {
-  constructor() {}
+  createGroup() {
+    console.log('createGroup');
+  }
+  constructor() {
+    addIcons({
+      add,
+      peopleOutline,
+    });
+  }
 }

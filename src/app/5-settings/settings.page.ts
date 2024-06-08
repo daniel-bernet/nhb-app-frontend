@@ -6,24 +6,49 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from "../explore-container/explore-container.component";
+  IonList,
+  IonItem,
+  IonIcon,
+  IonLabel, IonItemGroup, IonItemDivider } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  keyOutline,
+  mailOpenOutline,
+  personOutline,
+  logOutOutline,
+  trashOutline,
+  languageOutline,
+  contrastOutline,
+} from 'ionicons/icons';
 
 @Component({
-    selector: 'app-settings',
-    templateUrl: './settings.page.html',
-    styleUrls: ['./settings.page.scss'],
-    standalone: true,
-    imports: [
-        IonContent,
-        IonHeader,
-        IonTitle,
-        IonToolbar,
-        CommonModule,
-        FormsModule,
-        ExploreContainerComponent
-    ]
+  selector: 'app-settings',
+  templateUrl: './settings.page.html',
+  styleUrls: ['./settings.page.scss'],
+  standalone: true,
+  imports: [IonItemDivider, IonItemGroup, 
+    IonLabel,
+    IonIcon,
+    IonItem,
+    IonList,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    CommonModule,
+    FormsModule,
+  ],
 })
 export class SettingsPage {
-  constructor() {}
+  constructor() {
+    addIcons({
+      keyOutline,
+      mailOpenOutline,
+      personOutline,
+      logOutOutline,
+      trashOutline,
+      languageOutline,
+      contrastOutline,
+    });
+  }
 }

@@ -1,9 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title> Information </ion-title>
+    <ion-button fill="clear" slot="end" (click)="informationActionSheet()">
+      <ion-icon size="large" aria-hidden="true" name="menu-outline"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" id="information">
   <app-explore-container name="Information page"></app-explore-container>
 </ion-content>
