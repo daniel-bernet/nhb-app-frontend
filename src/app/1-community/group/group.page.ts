@@ -9,8 +9,7 @@ import {
   IonCard,
   IonCardTitle,
   IonCardHeader,
-  IonCardSubtitle,
-} from '@ionic/angular/standalone';
+  IonCardSubtitle, IonText } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -18,7 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './group.page.html',
   styleUrls: ['./group.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonText, 
     IonCardSubtitle,
     IonCardHeader,
     IonCardTitle,

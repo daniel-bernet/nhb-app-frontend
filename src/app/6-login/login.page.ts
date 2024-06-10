@@ -40,8 +40,8 @@ import { Router } from '@angular/router';
   ],
 })
 export class LoginPage {
-  email: string = '';
-  password: string = '';
+  email: string = 'test@test.com';
+  password: string = 'Test1test';
   errorMessage?: string;
 
   constructor(

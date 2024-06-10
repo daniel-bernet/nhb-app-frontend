@@ -14,12 +14,17 @@ export class ApiService {
     private authService: AuthService
   ) {}
 
+  private createAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.authService.getJWT()}`,
+    });
+  }
+
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
     const url = `${this.api_domain}/account/change-password`;
     const body = { oldPassword, newPassword };
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+    const headers = this.createAuthHeaders();
 
     return this.httpClient.post<any>(url, body, { headers });
   }
@@ -27,10 +32,7 @@ export class ApiService {
   changeEmail(newEmail: string): Observable<any> {
     const url = `${this.api_domain}/account/change-email`;
     const body = { newEmail };
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.authService.getJWT()}`,
-    });
+    const headers = this.createAuthHeaders();
 
     return this.httpClient.post<any>(url, body, { headers });
   }
@@ -38,10 +40,7 @@ export class ApiService {
   changeFirstName(newFirstName: string): Observable<any> {
     const url = `${this.api_domain}/account/change-first-name`;
     const body = { firstName: newFirstName };
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.authService.getJWT()}`,
-    });
+    const headers = this.createAuthHeaders();
 
     return this.httpClient.patch<any>(url, body, { headers });
   }
@@ -49,25 +48,54 @@ export class ApiService {
   changeLastName(newLastName: string): Observable<any> {
     const url = `${this.api_domain}/account/change-last-name`;
     const body = { lastName: newLastName };
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.authService.getJWT()}`,
-    });
+    const headers = this.createAuthHeaders();
 
     return this.httpClient.patch<any>(url, body, { headers });
   }
 
   logOut(): Observable<any> {
-    // remove jwt from storage
-    // navigate to the login page
     console.log('no logout implementation present');
     this.authService.voidJWT();
     return new Observable();
   }
 
   deleteAccount(): Observable<any> {
-    // delete account
-    console.log('no delete account implementation present');
-    return new Observable();
+    const url = `${this.api_domain}/account/delete-account`;
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.delete<any>(url, { headers });
+  }
+
+  getAccountInfo(): Observable<any> {
+    const url = `${this.api_domain}/account/account-info`;
+    const headers = this.createAuthHeaders();
+    return this.httpClient.get<any>(url, { headers });
+  }
+
+  getSentiments(): Observable<any[]> {
+    const url = `${this.api_domain}/sentiment/get-sentiments`;
+    const headers = this.createAuthHeaders();
+    return this.httpClient.get<any[]>(url, { headers });
+  }
+
+  getTypes(): Observable<any[]> {
+    const url = `${this.api_domain}/type/get-types`;
+    const headers = this.createAuthHeaders();
+    return this.httpClient.get<any[]>(url, { headers });
+  }
+
+  getBasicGroupInformation(): Observable<any> {
+    const url = `${this.api_domain}/account/get-basic-group-information`;
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.get<any>(url, { headers });
+  }
+
+  createGroup(name: string, description: string): Observable<any> {
+    const url = `${this.api_domain}/group/create`;
+    const headers = this.createAuthHeaders();
+    const body = { name, description };
+
+    return this.httpClient.post<any>(url, body, { headers });
   }
 }

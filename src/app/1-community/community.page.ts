@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import {
   IonHeader,
@@ -18,9 +18,17 @@ import {
   IonFab,
   IonFabButton,
   IonFabList,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonText,
+  IonLoading,
+  AlertController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { add, peopleOutline } from 'ionicons/icons';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-community',
@@ -28,6 +36,12 @@ import { add, peopleOutline } from 'ionicons/icons';
   styleUrls: ['community.page.scss'],
   standalone: true,
   imports: [
+    IonLoading,
+    IonText,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonFabList,
     IonFabButton,
     IonFab,
@@ -47,12 +61,35 @@ import { add, peopleOutline } from 'ionicons/icons';
     IonContent,
   ],
 })
-export class CommunityPage {
-  groups: Map<string, string> = new Map([
-    ['1', 'group1'],
-    ['2', 'group2'],
-    ['3', 'group3'],
-  ]);
+export class CommunityPage implements OnInit {
+  constructor(
+    private router: Router,
+    private dataService: DataService,
+    private alertController: AlertController
+  ) {
+    addIcons({
+      add,
+      peopleOutline,
+    });
+  }
+
+  groups: any[] = [];
+
+  ngOnInit() {
+    this.fetchGroups();
+  }
+
+  fetchGroups() {
+    this.dataService.getGroups().subscribe({
+      next: (groups) => {
+        console.log(groups)
+        this.groups = groups;
+      },
+      error: (error) => {
+        console.error('Failed to fetch groups', error);
+      },
+    });
+  }
 
   openGroup(groupID: string) {
     let navigationExtras: NavigationExtras = {
@@ -60,17 +97,53 @@ export class CommunityPage {
         groupID: groupID,
       },
     };
-    this.router.navigate(['tabs','community','group'], navigationExtras);
+    this.router.navigate(['tabs', 'community', 'group'], navigationExtras);
   }
 
-  createGroup() {
-    console.log('createGroup');
-  }
-
-  constructor(private router: Router) {
-    addIcons({
-      add,
-      peopleOutline,
+  async createGroup() {
+    const alert = await this.alertController.create({
+      header: 'Create New Group',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Group Name',
+        },
+        {
+          name: 'description',
+          type: 'text',
+          placeholder: 'Description',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Create',
+          handler: (data) => {
+            if (data.name && data.description) {
+              this.dataService
+                .createGroup(data.name, data.description)
+                .subscribe({
+                  next: () => {
+                    console.log('Group created successfully');
+                  },
+                  error: (error) => {
+                    console.error('Failed to create group', error);
+                    return false;
+                  },
+                });
+              return true;
+            } else {
+              return false;
+            }
+          },
+        },
+      ],
     });
+
+    await alert.present();
   }
 }

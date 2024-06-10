@@ -7,9 +7,8 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-
   constructor(private httpClient: HttpClient) {}
-  
+
   private api_domain: string = 'http://localhost:9001';
   private jwt_token?: string;
 
@@ -45,6 +44,7 @@ export class AuthService {
   }
 
   getJWT() {
+    console.log('the jwt token is:',this.jwt_token);
     return this.jwt_token;
   }
 
