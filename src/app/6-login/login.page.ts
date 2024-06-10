@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,9 +12,12 @@ import {
   IonCard,
   IonNavLink,
   IonIcon,
+  AlertController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOutline } from 'ionicons/icons';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -37,25 +40,56 @@ import { eyeOutline } from 'ionicons/icons';
   ],
 })
 export class LoginPage {
-  email: string = "";
-  password: string = "";
+  email: string = '';
+  password: string = '';
+  errorMessage?: string;
 
-  constructor() {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private alertController: AlertController
+  ) {
     addIcons({
-      eyeOutline
+      eyeOutline,
     });
   }
 
-  login() {
-    if (this.email === "" || this.password === "") {
-      console.log('insufficient input');
+  async login(): Promise<void> {
+    if (this.email === '' || this.password === '') {
+      this.displayError('Please fill all fields');
       return;
     }
+
     if (
       !this.email.match(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/)
     ) {
-      console.log(this.email + 'does not match regex');
+      this.displayError('Please enter a valid email address');
       return;
     }
+
+    this.authService?.login(this.email, this.password).subscribe({
+      next: (response) => {
+        this.router.navigateByUrl('/community');
+      },
+      error: (error) => {
+        this.displayError(
+          error.error?.message || 'Login failed, please try again'
+        );
+      },
+    });
+  }
+
+  displayError(message: string): void {
+    this.errorMessage = message;
+
+    this.alertController
+      ?.create({
+        header: 'Authentication Failed',
+        message: message,
+        buttons: ['OK'],
+      })
+      .then((alert) => {
+        alert.present();
+      });
   }
 }

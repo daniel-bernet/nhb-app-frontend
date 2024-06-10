@@ -21,6 +21,7 @@
       fill="outline"
       placeholder="password"
       [(ngModel)]="password"
+      type="password"
     >
       <!--
       <ion-button fill="clear" slot="end" aria-label="Show/hide">
@@ -28,9 +29,12 @@
       </ion-button>
       -->
     </ion-input>
-    <ion-button (click)="login()">
+    <ion-button (click)=" login()">
       <ion-label>Login</ion-label>
     </ion-button>
+    @if (errorMessage) {
+    <ion-label color="danger">{{ errorMessage }}</ion-label>
+    }
   </div>
   <div>
     <span>Don't have an account yet?</span>
