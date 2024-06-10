@@ -69,7 +69,7 @@ export class LoginPage {
 
     this.authService?.login(this.email, this.password).subscribe({
       next: (response) => {
-        this.router.navigateByUrl('/community');
+        this.router.navigateByUrl('/tabs/community');
       },
       error: (error) => {
         this.displayError(

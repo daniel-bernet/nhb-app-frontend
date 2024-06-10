@@ -2,28 +2,9 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'community',
+    path: 'tabs',
     loadChildren: () =>
-      import('./1-community/community.routes').then((m) => m.routes),
-  },
-  {
-    path: 'information',
-    loadChildren: () =>
-      import('./2-information/information.routes').then((m) => m.routes),
-  },
-  {
-    path: 'calendar',
-    loadChildren: () =>
-      import('./3-calendar/calendar.routes').then((m) => m.routes),
-  },
-  {
-    path: 'media',
-    loadChildren: () => import('./4-media/media.routes').then((m) => m.routes),
-  },
-  {
-    path: 'settings',
-    loadChildren: () =>
-      import('./5-settings/settings.routes').then((m) => m.routes),
+      import('./0-tabs/tabs.routes').then((m) => m.routes),
   },
   {
     path: 'login',

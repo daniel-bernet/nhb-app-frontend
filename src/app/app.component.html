@@ -1,33 +1,3 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
-  <ion-tabs>
-    @if (showTabs$ | async) {
-    <ion-tab-bar>
-      <ion-tab-button tab="community" routerLink="/community">
-        <ion-icon  name="people-outline"></ion-icon>
-        <ion-label>Community</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="information" routerLink="/infromation">
-        <ion-icon aria-hidden="true" name="information-circle-outline"></ion-icon>
-        <ion-label>Information</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="calendar" routerLink="/calendar">
-        <ion-icon aria-hidden="true" name="calendar-outline"></ion-icon>
-        <ion-label>Calendar</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="media" routerLink="/media">
-        <ion-icon aria-hidden="true" name="book-outline"></ion-icon>
-        <ion-label>Media</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="settings" routerLink="/settings">
-        <ion-icon aria-hidden="true" name="cog-outline"></ion-icon>
-        <ion-label>Settings</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-    }
-  </ion-tabs>
 </ion-app>

@@ -75,7 +75,7 @@ export class RegisterPage {
       .register(this.firstName, this.lastName, this.email, this.password)
       .subscribe({
         next: (response) => {
-          this.router.navigateByUrl('/community');
+          this.router.navigateByUrl('/tabs/community');
         },
         error: (error) => {
           this.displayError(

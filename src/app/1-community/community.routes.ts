@@ -8,7 +8,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/community',
         pathMatch: 'full',
       },
     ],
