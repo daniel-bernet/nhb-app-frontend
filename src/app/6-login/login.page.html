@@ -8,19 +8,32 @@
       label-placement="floating"
       fill="outline"
       placeholder="your@email.com"
+      labelPlacement="floating"
+      helperText="Enter a valid email"
+      errorText="Invalid email"
+      ngModel
+      email
+      [(ngModel)]="email"
     ></ion-input>
     <ion-input
       label="Password"
       label-placement="floating"
       fill="outline"
       placeholder="password"
-    ></ion-input>
-    <ion-button (click)="null">
+      [(ngModel)]="password"
+    >
+      <!--
+      <ion-button fill="clear" slot="end" aria-label="Show/hide">
+        <ion-icon slot="icon-only" name="eye-outline" aria-hidden="true"></ion-icon>
+      </ion-button>
+      -->
+    </ion-input>
+    <ion-button (click)="login()">
       <ion-label>Login</ion-label>
     </ion-button>
   </div>
   <div>
     <span>Don't have an account yet?</span>
-    <span>Sign up</span>
+    <a href="/register">Sign up</a>
   </div>
 </ion-content>

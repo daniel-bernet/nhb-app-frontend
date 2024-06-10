@@ -7,16 +7,25 @@ import {
   IonTitle,
   IonLabel,
   IonInput,
-  IonButton, IonItem, IonCard, IonNavLink } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
-import { RegisterPage } from '../7-register/register.page';
+  IonButton,
+  IonItem,
+  IonCard,
+  IonNavLink,
+  IonIcon,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { eyeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonNavLink, IonCard, IonItem, 
+  imports: [
+    IonIcon,
+    IonNavLink,
+    IonCard,
+    IonItem,
     IonButton,
     IonInput,
     IonLabel,
@@ -28,7 +37,25 @@ import { RegisterPage } from '../7-register/register.page';
   ],
 })
 export class LoginPage {
-  registerPage = RegisterPage;  
+  email: string = "";
+  password: string = "";
 
-  constructor(private router: Router) {}
+  constructor() {
+    addIcons({
+      eyeOutline
+    });
+  }
+
+  login() {
+    if (this.email === "" || this.password === "") {
+      console.log('insufficient input');
+      return;
+    }
+    if (
+      !this.email.match(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/)
+    ) {
+      console.log(this.email + 'does not match regex');
+      return;
+    }
+  }
 }

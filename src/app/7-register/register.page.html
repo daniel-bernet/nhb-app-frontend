@@ -10,6 +10,7 @@
       placeholder="Your First Name"
       autocapitalize="words"
       required="true"
+      [(ngModel)]="firstName"
     ></ion-input>
     <ion-input
       label="Last Name"
@@ -18,15 +19,21 @@
       placeholder="Your Last Name"
       autocapitalize="words"
       required="true"
+      [(ngModel)]="lastName"
     ></ion-input>
     <ion-input
       label="Email"
       label-placement="floating"
       fill="outline"
       placeholder="your@email.com"
-      type="email"
-      inputmode="email"
+      labelPlacement="floating"
       required="true"
+      type="email"
+      helperText="Enter a valid email"
+      errorText="Invalid email"
+      ngModel
+      email
+      [(ngModel)]="email"
     ></ion-input>
     <ion-input
       label="Password"
@@ -35,6 +42,10 @@
       placeholder="password"
       type="password"
       required="true"
+      helperText="Min 8 characters, 1 lower- and upper-case letter and 1 number!"
+      errorText="Invalid password"
+      [(ngModel)]="password"
+      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"
     ></ion-input>
     <ion-input
       label="Confirm Password"
@@ -43,13 +54,16 @@
       placeholder="password"
       type="password"
       required="true"
+      errorText="Invalid password"
+      [(ngModel)]="passwordConfirm"
+      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"
     ></ion-input>
-    <ion-button (click)="null">
+    <ion-button (click)="register()">
       <ion-label>Register</ion-label>
     </ion-button>
   </div>
   <div>
     <span>Already have an account?</span>
-    <span>Login</span>
+    <a href="/login">Login</a>
   </div>
 </ion-content>
