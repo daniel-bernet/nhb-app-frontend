@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -47,10 +48,26 @@ import { add, peopleOutline } from 'ionicons/icons';
   ],
 })
 export class CommunityPage {
+  groups: Map<string, string> = new Map([
+    ['1', 'group1'],
+    ['2', 'group2'],
+    ['3', 'group3'],
+  ]);
+
+  openGroup(groupID: string) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        groupID: groupID,
+      },
+    };
+    this.router.navigate(['tabs','community','group'], navigationExtras);
+  }
+
   createGroup() {
     console.log('createGroup');
   }
-  constructor() {
+
+  constructor(private router: Router) {
     addIcons({
       add,
       peopleOutline,

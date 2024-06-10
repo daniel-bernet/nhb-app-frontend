@@ -7,10 +7,10 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  private api_domain: string = 'http://localhost:9001';
 
   constructor(private httpClient: HttpClient) {}
-
+  
+  private api_domain: string = 'http://localhost:9001';
   private jwt_token?: string;
 
   login(email: string, password: string): Observable<any> {
@@ -46,5 +46,9 @@ export class AuthService {
 
   getJWT() {
     return this.jwt_token;
+  }
+
+  voidJWT() {
+    this.jwt_token = undefined;
   }
 }

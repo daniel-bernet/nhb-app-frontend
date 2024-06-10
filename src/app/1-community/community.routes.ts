@@ -1,22 +1,14 @@
 import { Routes } from '@angular/router';
 import { CommunityPage } from './community.page';
+import { GroupPage } from './group/group.page';
 
 export const routes: Routes = [
   {
-    path: 'community',
+    path: '',
     component: CommunityPage,
-    children: [
-      {
-        path: '',
-        redirectTo: '/tabs/community',
-        pathMatch: 'full',
-      },
-    ],
   },
   {
-    path: '',
-    loadComponent: () =>
-      import('./community.page').then((m) => m.CommunityPage),
-    pathMatch: 'full',
+    path: 'group',
+    component: GroupPage
   },
 ];
