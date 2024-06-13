@@ -14,10 +14,10 @@
   } @else { @for (group of groups; track group) {
   <ion-card (click)="openGroup(group.GroupID)">
     <ion-card-header>
-      <ion-card-title>{{group.name}}</ion-card-title>
+      <ion-card-title>{{group.Name}}</ion-card-title>
       <ion-card-subtitle>
         <ion-text> {{group.band.Name}} </ion-text>
-        <ion-text> {{group.groupMembers.length}} members </ion-text>
+        <ion-text> {{group.members.length}} members </ion-text>
       </ion-card-subtitle>
     </ion-card-header>
   </ion-card>
