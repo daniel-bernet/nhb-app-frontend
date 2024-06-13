@@ -10,6 +10,7 @@ export class DataService {
   private sentiments = new BehaviorSubject<any[]>([]);
   private types = new BehaviorSubject<any[]>([]);
   private groups = new BehaviorSubject<any[]>([]);
+  private groupFeeds = new Map<string, BehaviorSubject<any[]>>();
 
   constructor(private apiService: ApiService) {}
 
@@ -84,5 +85,30 @@ export class DataService {
         }
       })
     );
+  }
+
+  getGroupFeed(groupId: string, fetchMore = false): Observable<any[]> {
+    if (!this.groupFeeds.has(groupId)) {
+      this.groupFeeds.set(groupId, new BehaviorSubject<any[]>([]));
+    }
+
+    const feed = this.groupFeeds.get(groupId) || new BehaviorSubject<any[]>([]);
+
+    if (feed.getValue().length === 0 || fetchMore) {
+      const start = fetchMore ? feed?.getValue().length : 0;
+      this.apiService.getGroupFeed(groupId, start).subscribe({
+        next: (data) => {
+          const currentFeed = feed.getValue();
+          const updatedFeed = fetchMore
+            ? [...currentFeed, ...data.data]
+            : data.data;
+          feed.next(updatedFeed);
+        },
+        error: (error) =>
+          console.error(`Failed to fetch feed for group ${groupId}`, error),
+      });
+    }
+
+    return feed.asObservable();
   }
 }

@@ -12,7 +12,7 @@
     Not part of any groups, try creating one using the action-button!
   </ion-text>
   } @else { @for (group of groups; track group) {
-  <ion-card (click)="openGroup(group.GroupID)">
+  <ion-card (click)="openGroup(group)">
     <ion-card-header>
       <ion-card-title>{{group.Name}}</ion-card-title>
       <ion-card-subtitle>

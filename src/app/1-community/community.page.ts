@@ -91,10 +91,10 @@ export class CommunityPage implements OnInit {
     });
   }
 
-  openGroup(groupID: string) {
+  openGroup(group: any) {
     let navigationExtras: NavigationExtras = {
       state: {
-        groupID: groupID,
+        group: group,
       },
     };
     this.router.navigate(['tabs', 'community', 'group'], navigationExtras);

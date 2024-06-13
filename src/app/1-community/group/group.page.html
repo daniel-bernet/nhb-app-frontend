@@ -1,24 +1,52 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Group:{{ groupID }}</ion-title>
+    <ion-title>Group: {{ group.Name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<ion-card>
-  <ion-card-header>
-    <ion-card-title>Event 1</ion-card-title>
-    <ion-card-subtitle>
-      <ion-text>
-        Event 1 subtitle 1
-      </ion-text>
-      <ion-text>
-        Event 1 subtitle 2
-      </ion-text>
-    </ion-card-subtitle>
-  </ion-card-header>
-  <ion-content>
-    This is the event-content
-  </ion-content>
-</ion-card>
+  @if (feedItems) { @for (entry of feedItems; track entry.index) {
+    @if (entry.feedType === "event") {
+      <ion-card (click)="openEvent(entry)">
+        <ion-card-header>
+          <ion-card-title>{{entry.title}}</ion-card-title>
+          <ion-card-subtitle>
+            <ion-text> {{entry.location}} </ion-text>
+            <ion-text> {{entry.time}} </ion-text>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-content> This is the event-content </ion-content>
+      </ion-card>
+      } @else if (entry.feedType === "poll") {
+      <ion-card (click)="openPoll(entry)">
+        <ion-card-header>
+          <ion-card-title>{{entry.title}}</ion-card-title>
+          <ion-card-subtitle>
+            <ion-text> {{entry.questions.length}} </ion-text>
+            <ion-text> display nr of answers here </ion-text>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-content> This is the poll-content </ion-content>
+      </ion-card>
+    }
+  } } @else {
+  <ion-loading></ion-loading>
+  }
+
+  <ion-card *ngFor="let entry of feedItems">
+    <ion-card-header>
+      <ion-card-title>{{ entry.title }}</ion-card-title>
+      <ion-card-subtitle>{{ entry.description }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-content>
+      {{ entry.content }}
+    </ion-content>
+  </ion-card>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
