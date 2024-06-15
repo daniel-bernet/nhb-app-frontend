@@ -92,23 +92,82 @@ export class DataService {
       this.groupFeeds.set(groupId, new BehaviorSubject<any[]>([]));
     }
 
-    const feed = this.groupFeeds.get(groupId) || new BehaviorSubject<any[]>([]);
+    const feed = this.groupFeeds.get(groupId);
 
-    if (feed.getValue().length === 0 || fetchMore) {
-      const start = fetchMore ? feed?.getValue().length : 0;
+    if (feed!.getValue().length === 0 || fetchMore) {
+      const start = fetchMore ? feed!.getValue().length : 0;
       this.apiService.getGroupFeed(groupId, start).subscribe({
         next: (data) => {
-          const currentFeed = feed.getValue();
+          console.log('fetched group feed delivered from API: ', data);
+          const currentFeed = feed!.getValue();
           const updatedFeed = fetchMore
             ? [...currentFeed, ...data.data]
             : data.data;
-          feed.next(updatedFeed);
+          feed!.next(updatedFeed);
         },
         error: (error) =>
           console.error(`Failed to fetch feed for group ${groupId}`, error),
       });
     }
 
-    return feed.asObservable();
+    return feed!.asObservable();
+  }
+
+  createPoll(
+    groupID: string,
+    typeID: string,
+    title: string,
+    description: string,
+    questions: any[]
+  ) {
+    return this.apiService
+      .createPoll(groupID, typeID, title, description, questions)
+      .pipe(
+        tap((response) => {
+          if (response && response.poll) {
+            // Assuming you might want to keep track of polls similarly to groups
+            // This is just an example and might need adjustments based on actual app requirements
+            this.updatePollsData(response.poll);
+          }
+        })
+      );
+  }
+
+  createEvent(
+    groupID: string,
+    typeID: string,
+    title: string,
+    description: string,
+    location: string,
+    date: Date,
+    duration: number
+  ) {
+    return this.apiService
+      .createEvent(
+        groupID,
+        typeID,
+        title,
+        description,
+        location,
+        date,
+        duration
+      )
+      .pipe(
+        tap((response) => {
+          if (response && response.event) {
+            // Update local events data similarly
+            this.updateEventsData(response.event);
+          }
+        })
+      );
+  }
+
+  // Example methods to update local state
+  private updatePollsData(poll: any) {
+    // Implement actual logic to integrate new poll into local data state
+  }
+
+  private updateEventsData(event: any) {
+    // Implement actual logic to integrate new event into local data state
   }
 }

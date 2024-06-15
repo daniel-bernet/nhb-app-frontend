@@ -14,10 +14,16 @@ import {
   IonLoading,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonFabList,
+  IonCardContent,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
+import { addIcons } from 'ionicons';
+import { add, calendarOutline, chatbubblesOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-group',
@@ -25,6 +31,11 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./group.page.scss'],
   standalone: true,
   imports: [
+    IonCardContent,
+    IonFabList,
+    IonIcon,
+    IonFabButton,
+    IonFab,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonLoading,
@@ -50,7 +61,13 @@ export class GroupPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService
-  ) {}
+  ) {
+    addIcons({
+      add,
+      calendarOutline,
+      chatbubblesOutline,
+    });
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -59,15 +76,20 @@ export class GroupPage implements OnInit {
           this.router.getCurrentNavigation()?.extras.state?.['group'];
         this.loadFeed();
       }
+      console.log(['feedItems: ', this.feedItems]);
     });
   }
 
   loadFeed(fetchMore: boolean = false) {
-    this.dataService.getGroupFeed(this.group.groupID, fetchMore).subscribe({
-      next: (data) =>
-        (this.feedItems = fetchMore ? [...this.feedItems, ...data] : data),
-      error: (error) => console.error('Failed to load group feed', error),
-    });
+    if (this.group && this.group.GroupID) {
+      this.dataService.getGroupFeed(this.group.GroupID, fetchMore).subscribe({
+        next: (data) => {
+          this.feedItems = fetchMore ? [...this.feedItems, ...data] : data;
+          console.log('feedItems after fetch: ', this.feedItems);
+        },
+        error: (error) => console.error('Failed to load group feed', error),
+      });
+    }
   }
 
   loadMore(event: any) {
@@ -80,5 +102,36 @@ export class GroupPage implements OnInit {
   }
   openEvent(arg0: any) {
     throw new Error('Method not implemented.');
+  }
+
+  createPoll() {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        groupID: this.group.GroupID,
+      },
+    };
+    this.router.navigate(
+      ['tabs', 'community', 'group', 'create-poll'],
+      navigationExtras
+    );
+  }
+  createEvent() {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        groupID: this.group.GroupID,
+      },
+    };
+    this.router.navigate(
+      ['tabs', 'community', 'group', 'create-event'],
+      navigationExtras
+    );
+  }
+
+  formatDate(dateUnformatted: string): string {
+    const date = new Date(dateUnformatted);
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid date');
+    }
+    return date.toLocaleDateString();
   }
 }

@@ -5,48 +5,48 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  @if (feedItems) { @for (entry of feedItems; track entry.index) {
-    @if (entry.feedType === "event") {
-      <ion-card (click)="openEvent(entry)">
-        <ion-card-header>
-          <ion-card-title>{{entry.title}}</ion-card-title>
-          <ion-card-subtitle>
-            <ion-text> {{entry.location}} </ion-text>
-            <ion-text> {{entry.time}} </ion-text>
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-content> This is the event-content </ion-content>
-      </ion-card>
-      } @else if (entry.feedType === "poll") {
-      <ion-card (click)="openPoll(entry)">
-        <ion-card-header>
-          <ion-card-title>{{entry.title}}</ion-card-title>
-          <ion-card-subtitle>
-            <ion-text> {{entry.questions.length}} </ion-text>
-            <ion-text> display nr of answers here </ion-text>
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-content> This is the poll-content </ion-content>
-      </ion-card>
-    }
-  } } @else {
-  <ion-loading></ion-loading>
-  }
-
-  <ion-card *ngFor="let entry of feedItems">
+  @if (feedItems) { @for (entry of feedItems; track entry.index) { @if
+  (entry.feedType === "event") {
+  <ion-card (click)="openEvent(entry)">
     <ion-card-header>
-      <ion-card-title>{{ entry.title }}</ion-card-title>
-      <ion-card-subtitle>{{ entry.description }}</ion-card-subtitle>
+      <ion-card-title>{{entry.Title}}</ion-card-title>
+      <ion-card-subtitle>
+        <ion-text> {{entry.Location}} </ion-text>
+        <ion-text> {{formatDate(entry.Date)}} </ion-text>
+      </ion-card-subtitle>
     </ion-card-header>
-    <ion-content>
-      {{ entry.content }}
-    </ion-content>
   </ion-card>
+  } @else if (entry.feedType === "poll") {
+  <ion-card (click)="openPoll(entry)">
+    <ion-card-header>
+      <ion-card-title>{{entry.title}}</ion-card-title>
+      <ion-card-subtitle>
+        <ion-text> {{entry.questions.length}} </ion-text>
+        <ion-text> display nr of answers here </ion-text>
+      </ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+  } } } @else {feed is empty}
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content
       loadingSpinner="bubbles"
-      loadingText="Loading more data...">
+      loadingText="Loading more data..."
+    >
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="createEvent()">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="createPoll()">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>

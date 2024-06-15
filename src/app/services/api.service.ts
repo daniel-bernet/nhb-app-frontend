@@ -105,4 +105,42 @@ export class ApiService {
 
     return this.httpClient.get<any>(url, { headers });
   }
+
+  createPoll(
+    groupID: string,
+    typeID: string,
+    title: string,
+    description: string,
+    questions: any[]
+  ): Observable<any> {
+    const url = `${this.api_domain}/poll/create-poll`;
+    const body = { groupID, typeID, title, description, questions };
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.post<any>(url, body, { headers });
+  }
+
+  createEvent(
+    groupID: string,
+    typeID: string,
+    title: string,
+    description: string,
+    location: string,
+    date: Date,
+    duration: number
+  ): Observable<any> {
+    const url = `${this.api_domain}/event/create`;
+    const body = {
+      GroupID: groupID,
+      TypeID: typeID,
+      Title: title,
+      Description: description,
+      Location: location,
+      Date: date,
+      Duration: duration,
+    };
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.post<any>(url, body, { headers });
+  }
 }

@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Create Event</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-input
+    label="Event Title"
+    label-placement="floating"
+    fill="outline"
+    placeholder="Title"
+    [(ngModel)]="eventTitle"
+  ></ion-input>
+  <ion-input
+    label="Event Description"
+    label-placement="floating"
+    fill="outline"
+    placeholder="Description"
+    [(ngModel)]="eventDescription"
+  ></ion-input>
+  <ion-input
+    label="Event Location"
+    label-placement="floating"
+    fill="outline"
+    placeholder="Location"
+    [(ngModel)]="eventLocation"
+  ></ion-input>
+  <ion-input
+    label="Event Date"
+    label-placement="floating"
+    fill="outline"
+    placeholder="Date"
+    [(ngModel)]="eventDate"
+    type="Date"
+  ></ion-input>
+  <ion-input
+    label="Event Duration"
+    label-placement="floating"
+    fill="outline"
+    placeholder="Duration in minutes"
+    [(ngModel)]="eventDuration"
+    type="number"
+  ></ion-input>
+  <div>
+    <ion-label>Event Type</ion-label>
+    <ion-select [(ngModel)]="selectedTypeID" placeholder="Select Type">
+      @for (type of possibleTypes; track type.TypeID) {
+        <ion-select-option [value]="type.TypeID">
+          {{ type.Label }}
+        </ion-select-option>
+      }
+    </ion-select>
+  </div>
+
+  <ion-button (click)=" createEvent()">
+    <ion-label>Create</ion-label>
+  </ion-button>
+
+  @if (errorMessage) {
+  <ion-label color="danger">{{ errorMessage }}</ion-label>
+  }
+</ion-content>
