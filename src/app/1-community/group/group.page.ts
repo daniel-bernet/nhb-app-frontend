@@ -24,6 +24,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { addIcons } from 'ionicons';
 import { add, calendarOutline, chatbubblesOutline } from 'ionicons/icons';
+import { FormatService } from 'src/app/services/format.service';
 
 @Component({
   selector: 'app-group',
@@ -60,7 +61,8 @@ export class GroupPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    protected formatService: FormatService,
   ) {
     addIcons({
       add,
@@ -97,11 +99,29 @@ export class GroupPage implements OnInit {
     event.target.complete();
   }
 
-  openPoll(arg0: any) {
-    throw new Error('Method not implemented.');
+  openPoll(poll: any) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        poll: poll,
+        group: this.group,
+      },
+    };
+    this.router.navigate(
+      ['tabs', 'community', 'group', 'poll'],
+      navigationExtras
+    );
   }
-  openEvent(arg0: any) {
-    throw new Error('Method not implemented.');
+  openEvent(event: any) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        event: event,
+        group: this.group,
+      },
+    };
+    this.router.navigate(
+      ['tabs', 'community', 'group', 'event'],
+      navigationExtras
+    );
   }
 
   createPoll() {
@@ -127,11 +147,19 @@ export class GroupPage implements OnInit {
     );
   }
 
-  formatDate(dateUnformatted: string): string {
-    const date = new Date(dateUnformatted);
-    if (isNaN(date.getTime())) {
-      throw new Error('Invalid date');
+  answerOverview(questions: any[]): string {
+    var answerCount = 0;
+    const memberCount = questions[0].answers.length;
+    for (let i = 0; i < memberCount; i++) {
+      var answeredAllQuestions = true;
+      questions.forEach(function (question) {
+        if (question.answers[i].option.sentiment.Sentiment === 'u') {
+          answeredAllQuestions = false;
+          return;
+        }
+      });
+      answerCount += answeredAllQuestions ? 1 : 0;
     }
-    return date.toLocaleDateString();
+    return answerCount + ' of ' + memberCount + ' have answered';
   }
 }

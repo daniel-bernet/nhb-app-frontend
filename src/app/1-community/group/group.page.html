@@ -12,17 +12,17 @@
       <ion-card-title>{{entry.Title}}</ion-card-title>
       <ion-card-subtitle>
         <ion-text> {{entry.Location}} </ion-text>
-        <ion-text> {{formatDate(entry.Date)}} </ion-text>
+        <ion-text> {{formatService.formatDate(entry.Date)}} </ion-text>
       </ion-card-subtitle>
     </ion-card-header>
   </ion-card>
   } @else if (entry.feedType === "poll") {
   <ion-card (click)="openPoll(entry)">
     <ion-card-header>
-      <ion-card-title>{{entry.title}}</ion-card-title>
+      <ion-card-title>{{entry.Title}}</ion-card-title>
       <ion-card-subtitle>
-        <ion-text> {{entry.questions.length}} </ion-text>
-        <ion-text> display nr of answers here </ion-text>
+        <ion-text> {{entry.questions.length}} Questions </ion-text>
+        <ion-text> {{answerOverview(entry.questions)}} </ion-text>
       </ion-card-subtitle>
     </ion-card-header>
   </ion-card>
