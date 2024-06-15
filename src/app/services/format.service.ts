@@ -8,10 +8,11 @@ export class FormatService {
 
   formatDate(dateUnformatted: string): string {
     const date = new Date(dateUnformatted);
+    const weekday = ["Sun","Mon","Tue","Wen","Thu","Fri","Sat"];
     if (isNaN(date.getTime())) {
       throw new Error('Invalid date');
     }
-    return date.toLocaleDateString();
+    return weekday[date.getDay()] + " " + date.toLocaleDateString();
   }
 
   formatDuration(durationUnfromatted: number): string {

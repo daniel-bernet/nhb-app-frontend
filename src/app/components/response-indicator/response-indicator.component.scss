@@ -1,0 +1,37 @@
+.responseBarContainer {
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+}
+
+.parent {
+  display: flex;
+  width: 100%;
+}
+
+.positive,
+.mid,
+.negative,
+.unanswered {
+  height: 10px; // Set a fixed height for the bars
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.positive {
+  background-color: green;
+}
+
+.mid {
+  background-color: orange;
+}
+
+.negative {
+  background-color: red;
+}
+
+.unanswered {
+  background-color: gray;
+}

@@ -160,6 +160,6 @@ export class GroupPage implements OnInit {
       });
       answerCount += answeredAllQuestions ? 1 : 0;
     }
-    return answerCount + ' of ' + memberCount + ' have answered';
+    return answerCount + ' of ' + memberCount + ' answered';
   }
 }

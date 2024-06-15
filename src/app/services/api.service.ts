@@ -150,4 +150,28 @@ export class ApiService {
 
     return this.httpClient.get<any>(url, { headers });
   }
+
+  deleteEvent(eventId: string): Observable<any> {
+    const url = `${this.api_domain}/event/delete/${eventId}`;
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.delete<any>(url, { headers });
+  }
+
+  editEvent(
+    eventId: string,
+    eventData: {
+      Title: string;
+      Description: string;
+      Location: string;
+      Date: Date;
+      Duration: number;
+    }
+  ): Observable<any> {
+    const url = `${this.api_domain}/event/edit/${eventId}`;
+    const headers = this.createAuthHeaders();
+    const body = eventData;
+
+    return this.httpClient.patch<any>(url, body, { headers });
+  }
 }

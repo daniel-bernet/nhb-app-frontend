@@ -1,0 +1,14 @@
+<div class="responseBarContainer">
+  <div class="parent">
+    @for (entry of responseCounts; track entry) {
+    <div
+      [class]="entry[0]"
+      [style.width]="(entry[1] / totalResponses) * 100 + '%'"
+    >
+    <!--
+      {{ entry[0] }}: {{ entry[1] }} maybe display more information?
+    -->
+    </div>
+    }
+  </div>
+</div>

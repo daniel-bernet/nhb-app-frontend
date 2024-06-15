@@ -177,4 +177,31 @@ export class DataService {
     }
     return this.pollOptions.asObservable();
   }
+
+  deleteEvent(eventId: string): Observable<any> {
+    return this.apiService.deleteEvent(eventId).pipe(
+      tap({
+        next: (response) => console.log(response.message),
+        error: (error) => console.error('Error deleting event:', error.message),
+      })
+    );
+  }
+
+  editEvent(
+    eventId: string,
+    eventData: {
+      Title: string;
+      Description: string;
+      Location: string;
+      Date: Date;
+      Duration: number;
+    }
+  ): Observable<any> {
+    return this.apiService.editEvent(eventId, eventData).pipe(
+      tap({
+        next: (response) => console.log(response.message),
+        error: (error) => console.error('Error updating event:', error.message),
+      })
+    );
+  }
 }
