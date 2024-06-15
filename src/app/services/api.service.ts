@@ -143,4 +143,11 @@ export class ApiService {
 
     return this.httpClient.post<any>(url, body, { headers });
   }
+
+  getPollOptions(): Observable<any> {
+    const url = `${this.api_domain}/poll/get-options`;
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.get<any>(url, { headers });
+  }
 }

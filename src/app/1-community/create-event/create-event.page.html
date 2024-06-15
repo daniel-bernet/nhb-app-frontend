@@ -46,9 +46,9 @@
     <ion-label>Event Type</ion-label>
     <ion-select [(ngModel)]="selectedTypeID" placeholder="Select Type">
       @for (type of possibleTypes; track type.TypeID) {
-        <ion-select-option [value]="type.TypeID">
-          {{ type.Label }}
-        </ion-select-option>
+      <ion-select-option [value]="type.TypeID">
+        {{type.Label}}
+      </ion-select-option>
       }
     </ion-select>
   </div>

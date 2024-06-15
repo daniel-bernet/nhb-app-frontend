@@ -5,5 +5,111 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  hello to create poll
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title> General Poll Information </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-input
+        label="Poll Title"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Title"
+        [(ngModel)]="pollTitle"
+      ></ion-input>
+      <ion-input
+        label="Poll Description"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Description"
+        [(ngModel)]="pollDescription"
+      ></ion-input>
+      <ion-select
+        [(ngModel)]="selectedTypeID"
+        placeholder="Select Type"
+        fill="outline"
+        label="Poll Type"
+        label-placement="floating"
+      >
+        @for (type of possibleTypes; track type.TypeID) {
+        <ion-select-option [value]="type.TypeID">
+          {{type.Label}}
+        </ion-select-option>
+        }
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
+
+  @for (question of questions; track question.index; let i = $index) {
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title> Question {{i+1}} </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-input
+        label="Question"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Location"
+        [(ngModel)]="question.questionText"
+      ></ion-input>
+      <ion-input
+        label="Date"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Date"
+        [(ngModel)]="question.date"
+        type="Date"
+      ></ion-input>
+      <ion-input
+        label="Duration"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Duration in minutes"
+        [(ngModel)]="question.duration"
+        type="number"
+      ></ion-input>
+      <ion-input
+        label="Question Description"
+        label-placement="floating"
+        fill="outline"
+        placeholder="Description"
+        [(ngModel)]="question.description"
+      ></ion-input>
+      <ion-select
+        [(ngModel)]="question.options"
+        multiple="true"
+        placeholder="Select Options"
+        fill="outline"
+        label="Answer Options"
+        label-placement="floating"
+      >
+        @for (option of pollOptions; track option.index) {
+        <ion-select-option [value]="option.OptionID">
+          {{option.Option}}
+        </ion-select-option>
+        }
+      </ion-select>
+
+      <ion-button
+        (click)="removeQuestion(i)"
+        [disabled]="questions.length === 1"
+      >
+        Remove Question
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <ion-button (click)="addQuestion()">
+    <ion-label>Add Question</ion-label>
+  </ion-button>
+
+  <ion-button (click)=" createPoll()">
+    <ion-label>Create Poll</ion-label>
+  </ion-button>
+
+  @if (errorMessage) {
+  <ion-label color="danger">{{ errorMessage }}</ion-label>
+  }
 </ion-content>

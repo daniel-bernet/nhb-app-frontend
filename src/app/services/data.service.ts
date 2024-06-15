@@ -11,6 +11,7 @@ export class DataService {
   private types = new BehaviorSubject<any[]>([]);
   private groups = new BehaviorSubject<any[]>([]);
   private groupFeeds = new Map<string, BehaviorSubject<any[]>>();
+  private pollOptions = new BehaviorSubject<any[]>([]);
 
   constructor(private apiService: ApiService) {}
 
@@ -125,9 +126,7 @@ export class DataService {
       .pipe(
         tap((response) => {
           if (response && response.poll) {
-            // Assuming you might want to keep track of polls similarly to groups
-            // This is just an example and might need adjustments based on actual app requirements
-            this.updatePollsData(response.poll);
+            this.getGroupFeed(groupID);
           }
         })
       );
@@ -155,19 +154,27 @@ export class DataService {
       .pipe(
         tap((response) => {
           if (response && response.event) {
-            // Update local events data similarly
-            this.updateEventsData(response.event);
+            this.getGroupFeed(groupID);
           }
         })
       );
   }
 
-  // Example methods to update local state
-  private updatePollsData(poll: any) {
-    // Implement actual logic to integrate new poll into local data state
+  fetchPollOptions() {
+    this.apiService.getPollOptions().subscribe({
+      next: (data) => {
+        this.pollOptions.next(data.data);
+      },
+      error: (error) => {
+        console.error('Failed to fetch poll options', error);
+      },
+    });
   }
 
-  private updateEventsData(event: any) {
-    // Implement actual logic to integrate new event into local data state
+  getPollOptions(): Observable<any[]> {
+    if (this.pollOptions.getValue().length === 0) {
+      this.fetchPollOptions();
+    }
+    return this.pollOptions.asObservable();
   }
 }
