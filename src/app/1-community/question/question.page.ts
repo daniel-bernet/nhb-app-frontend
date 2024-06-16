@@ -7,52 +7,53 @@ import {
   IonTitle,
   IonToolbar,
   AlertController,
-  IonIcon,
-  IonFab,
-  IonFabButton,
-  IonFabList,
   IonList,
   IonItemGroup,
   IonItemDivider,
   IonLabel,
   IonItem,
+  IonIcon,
   IonText,
-  IonProgressBar,
+  IonFab,
+  IonFabButton,
+  IonFabList,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { FormatService } from 'src/app/services/format.service';
-import { addIcons } from 'ionicons';
+import { ResponseIndicatorComponent } from '../../components/response-indicator/response-indicator.component';
 import {
+  alertCircleOutline,
   buildOutline,
-  checkboxOutline,
+  checkmarkCircleOutline,
+  closeCircleOutline,
   ellipsisVerticalOutline,
+  helpCircleOutline,
   informationCircleOutline,
-  lockClosedOutline,
-  lockOpenOutline,
   peopleOutline,
-  pricetagOutline,
+  statsChartOutline,
+  timeOutline,
+  todayOutline,
   trashOutline,
 } from 'ionicons/icons';
-import { ResponseIndicatorComponent } from 'src/app/components/response-indicator/response-indicator.component';
+import { addIcons } from 'ionicons';
 
 @Component({
-  selector: 'app-poll',
-  templateUrl: './poll.page.html',
-  styleUrls: ['./poll.page.scss'],
+  selector: 'app-question',
+  templateUrl: './question.page.html',
+  styleUrls: ['./question.page.scss'],
   standalone: true,
   imports: [
-    IonProgressBar,
+    IonFabList,
+    IonFabButton,
+    IonFab,
     IonText,
+    IonIcon,
     IonItem,
     IonLabel,
     IonItemDivider,
     IonItemGroup,
     IonList,
-    IonFabList,
-    IonFabButton,
-    IonFab,
-    IonIcon,
     IonContent,
     IonHeader,
     IonTitle,
@@ -62,9 +63,9 @@ import { ResponseIndicatorComponent } from 'src/app/components/response-indicato
     ResponseIndicatorComponent,
   ],
 })
-export class PollPage implements OnInit {
+export class QuestionPage implements OnInit {
   group?: any;
-  poll?: any;
+  question?: any;
 
   constructor(
     private alertController: AlertController,
@@ -74,15 +75,18 @@ export class PollPage implements OnInit {
     protected formatService: FormatService
   ) {
     addIcons({
-      lockClosedOutline,
-      lockOpenOutline,
-      pricetagOutline,
+      peopleOutline,
+      todayOutline,
+      timeOutline,
+      statsChartOutline,
       informationCircleOutline,
+      checkmarkCircleOutline,
+      closeCircleOutline,
+      alertCircleOutline,
+      helpCircleOutline,
       ellipsisVerticalOutline,
       buildOutline,
       trashOutline,
-      checkboxOutline,
-      peopleOutline,
     });
   }
 
@@ -91,38 +95,10 @@ export class PollPage implements OnInit {
       if (this.router.getCurrentNavigation()?.extras.state) {
         this.group =
           this.router.getCurrentNavigation()?.extras.state?.['group'];
-        this.poll = this.router.getCurrentNavigation()?.extras.state?.['poll'];
+        this.question =
+          this.router.getCurrentNavigation()?.extras.state?.['question'];
       }
     });
-  }
-
-  deletePoll() {
-    throw new Error('Method not implemented.');
-  }
-
-  editPoll() {
-    throw new Error('Method not implemented.');
-  }
-
-  answerPoll() {
-    throw new Error('Method not implemented.');
-  }
-
-  openClosePoll() {
-    throw new Error('Method not implemented.');
-  }
-
-  openQuestion(question: any) {
-    let navigationExtras: NavigationExtras = {
-      state: {
-        question: question,
-        group: this.group,
-      },
-    };
-    this.router.navigate(
-      ['tabs', 'community', 'group', 'poll', 'question'],
-      navigationExtras
-    );
   }
 
   calculateResponseCounts(question: any): Map<string, number> {
@@ -159,5 +135,13 @@ export class PollPage implements OnInit {
     responseCounts.set('unanswered', unansweredResponse);
 
     return responseCounts;
+  }
+
+  deleteQuestion() {
+    throw new Error('Method not implemented.');
+  }
+
+  editQuestion() {
+    throw new Error('Method not implemented.');
   }
 }

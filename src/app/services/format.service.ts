@@ -20,4 +20,8 @@ export class FormatService {
     const min = Math.floor(durationUnfromatted % 60) + ' min';
     return h + min;
   }
+
+  formatName(firstName: string, lastName: string): string {
+    return firstName + " " + lastName.charAt(0) + ".";
+  }
 }

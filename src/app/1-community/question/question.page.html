@@ -1,0 +1,106 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ question.Question }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list lines="none">
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label> Question details </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+        <ion-label>Group</ion-label>
+        <ion-text>{{ group.Name }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="today-outline" slot="start"></ion-icon>
+        <ion-label>Date</ion-label>
+        <ion-text>{{ formatService.formatDate(question.Date) }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        <ion-label>Duration</ion-label>
+        <ion-text>
+          {{ formatService.formatDuration(question.Duration) }}
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="stats-chart-outline" slot="start"></ion-icon>
+        <ion-label>Feedback</ion-label>
+        <app-response-indicator
+          [responseCounts]="calculateResponseCounts(question)"
+        ></app-response-indicator>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+        <ion-label>Description</ion-label>
+        <ion-text>{{ question.Description }}</ion-text>
+      </ion-item>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label> Answers </ion-label>
+      </ion-item-divider>
+
+      @for (answer of question.answers; track question.index) { @if
+      (answer.option.sentiment.Sentiment === 'y') {
+      <ion-item>
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        <ion-label>
+          {{ formatService.formatName(answer.groupMember.account.FirstName,
+          answer.groupMember.account.LastName) }}
+        </ion-label>
+        <ion-text>{{ answer.option.Option }}</ion-text>
+      </ion-item>
+      } } @for (answer of question.answers; track question.index) { @if
+      (answer.option.sentiment.Sentiment === 'i') {
+      <ion-item>
+        <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
+        <ion-label>
+          {{ formatService.formatName(answer.groupMember.account.FirstName,
+          answer.groupMember.account.LastName) }}
+        </ion-label>
+        <ion-text>{{ answer.option.Option }}</ion-text>
+      </ion-item>
+      } } @for (answer of question.answers; track question.index) { @if
+      (answer.option.sentiment.Sentiment === 'n') {
+      <ion-item>
+        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+        <ion-label>
+          {{ formatService.formatName(answer.groupMember.account.FirstName,
+          answer.groupMember.account.LastName) }}
+        </ion-label>
+        <ion-text>{{ answer.option.Option }}</ion-text>
+      </ion-item>
+      } } @for (answer of question.answers; track question.index) { @if
+      (answer.option.sentiment.Sentiment === 'u') {
+      <ion-item>
+        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        <ion-label>
+          {{ formatService.formatName(answer.groupMember.account.FirstName,
+          answer.groupMember.account.LastName) }}
+        </ion-label>
+        <ion-text>{{ answer.option.Option }}</ion-text>
+      </ion-item>
+      } }
+    </ion-item-group>
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="editQuestion()">
+        <ion-icon name="build-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="deleteQuestion()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
