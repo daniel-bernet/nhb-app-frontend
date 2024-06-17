@@ -67,7 +67,7 @@
       <ion-fab-button (click)="deletePoll()">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button (click)="answerPoll()">
+      <ion-fab-button (click)="answerPoll()" [disabled]="poll.IsClosed">
         <ion-icon name="checkbox-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="openClosePoll()">

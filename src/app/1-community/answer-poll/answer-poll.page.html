@@ -1,0 +1,80 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Answer: {{ poll.Title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list lines="none">
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label> Poll details </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+        <ion-label>Type</ion-label>
+        <ion-text>{{ poll.pollType.Label }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="people-outline" slot="start"></ion-icon>
+        <ion-label>Group</ion-label>
+        <ion-text>{{ group.Name }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+        <ion-label>Description</ion-label>
+        <ion-text>{{ poll.Description }}</ion-text>
+      </ion-item>
+    </ion-item-group>
+
+    @for (question of poll.questions; track question.index; let i = $index) {
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label> Question {{ i + 1 }} </ion-label>
+      </ion-item-divider>
+
+      <ion-item>
+        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        <ion-label>Question</ion-label>
+        <ion-text> {{question.Question}} </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="today-outline" slot="start"></ion-icon>
+        <ion-label>Date</ion-label>
+        <ion-text> {{formatService.formatDate(question.Date)}} </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        <ion-label>Duration</ion-label>
+        <ion-text>
+          {{formatService.formatDuration(question.Duration)}}
+        </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+        <ion-label>Description</ion-label>
+        <ion-text> {{question.Description}} </ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="checkbox-outline" slot="start"></ion-icon>
+        <ion-select
+          label="Answer"
+          placeholder="unanswered"
+          [(ngModel)]="question.selectedOption"
+          (ionChange)="selectAnswer(question.QuestionID, $event.detail.value)"
+        >
+          @for (option of question.options; track option.index) {
+          <ion-select-option [value]="option.OptionID">
+            {{option.Option}}
+          </ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
+    }
+  </ion-list>
+
+  <ion-button (click)="submitAnswer()">
+    <ion-label>Submit</ion-label>
+  </ion-button>
+</ion-content>

@@ -7,6 +7,7 @@ import { EventPage } from './event/event.page';
 import { PollPage } from './poll/poll.page';
 import { QuestionPage } from './question/question.page';
 import { CreateGroupPage } from './create-group/create-group.page';
+import { AnswerPollPage } from './answer-poll/answer-poll.page';
 
 export const routes: Routes = [
   {
@@ -40,5 +41,9 @@ export const routes: Routes = [
   {
     path: 'group/poll/question',
     component: QuestionPage,
+  },
+  {
+    path: 'group/poll/answer-poll',
+    component: AnswerPollPage,
   },
 ];

@@ -208,4 +208,33 @@ export class DataService {
   searchAccounts(searchText: string): Observable<any[]> {
     return this.apiService.searchAccounts(searchText);
   }
+
+  openPoll(pollId: string): Observable<any> {
+    return this.apiService.openPoll(pollId).pipe(
+      tap({
+        error: (error) => console.error('Error opening poll', error),
+      })
+    );
+  }
+
+  closePoll(pollId: string): Observable<any> {
+    return this.apiService.closePoll(pollId).pipe(
+      tap({
+        error: (error) => console.error('Error closing poll', error),
+      })
+    );
+  }
+
+  submitAnswers(pollId: string, answers: any[]): Observable<any> {
+    return this.apiService.submitAnswers(pollId, answers).pipe(
+      tap({
+        next: (response) => {
+          console.log('Answers submitted successfully:', response);
+        },
+        error: (error) => {
+          console.error('Failed to submit answers:', error);
+        },
+      })
+    );
+  }
 }

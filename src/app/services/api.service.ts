@@ -186,4 +186,26 @@ export class ApiService {
 
     return this.httpClient.get<any[]>(url, { headers, params });
   }
+
+  openPoll(pollId: string): Observable<any> {
+    const url = `${this.api_domain}/poll/open/${pollId}`;
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.patch<any>(url, {}, { headers });
+  }
+
+  closePoll(pollId: string): Observable<any> {
+    const url = `${this.api_domain}/poll/close/${pollId}`;
+    const headers = this.createAuthHeaders();
+
+    return this.httpClient.patch<any>(url, {}, { headers });
+  }
+
+  submitAnswers(pollId: string, answers: any[]): Observable<any> {
+    const url = `${this.api_domain}/answer/submit-answer`;
+    const headers = this.createAuthHeaders();
+    const body = { pollId, answers };
+
+    return this.httpClient.post<any>(url, body, { headers });
+  }
 }

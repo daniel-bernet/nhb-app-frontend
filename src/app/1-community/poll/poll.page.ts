@@ -105,11 +105,38 @@ export class PollPage implements OnInit {
   }
 
   answerPoll() {
-    throw new Error('Method not implemented.');
+    let navigationExtras: NavigationExtras = {
+      state: {
+        poll: this.poll,
+        group: this.group,
+      },
+    };
+    this.router.navigate(
+      ['tabs', 'community', 'group', 'poll', 'answer-poll'],
+      navigationExtras
+    );
   }
 
   openClosePoll() {
-    throw new Error('Method not implemented.');
+    if (this.poll) {
+      const operation = this.poll.IsClosed ? 'open' : 'close';
+      const action =
+        operation === 'open'
+          ? this.dataService.openPoll
+          : this.dataService.closePoll;
+
+      action.call(this.dataService, this.poll.PollID).subscribe({
+        next: (response) => {
+          console.log(`Poll ${operation}ed successfully:`, response);
+          this.poll.IsClosed = !this.poll.IsClosed;
+        },
+        error: (error) => {
+          console.error(`Failed to ${operation} the poll:`, error);
+        },
+      });
+    } else {
+      console.error('Poll data is not available.');
+    }
   }
 
   openQuestion(question: any) {
