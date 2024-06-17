@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 
@@ -91,10 +91,14 @@ export class ApiService {
     return this.httpClient.get<any>(url, { headers });
   }
 
-  createGroup(name: string, description: string): Observable<any> {
+  createGroup(
+    name: string,
+    description: string,
+    accountIds: string[]
+  ): Observable<any> {
     const url = `${this.api_domain}/group/create`;
     const headers = this.createAuthHeaders();
-    const body = { name, description };
+    const body = { name, description, accountIds };
 
     return this.httpClient.post<any>(url, body, { headers });
   }
@@ -173,5 +177,13 @@ export class ApiService {
     const body = eventData;
 
     return this.httpClient.patch<any>(url, body, { headers });
+  }
+
+  searchAccounts(searchText: string): Observable<any[]> {
+    const url = `${this.api_domain}/account/search-account`;
+    const headers = this.createAuthHeaders();
+    const params = new HttpParams().set('searchText', searchText);
+
+    return this.httpClient.get<any[]>(url, { headers, params });
   }
 }

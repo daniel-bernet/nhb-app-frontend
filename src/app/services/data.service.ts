@@ -77,8 +77,8 @@ export class DataService {
     });
   }
 
-  createGroup(name: string, description: string) {
-    return this.apiService.createGroup(name, description).pipe(
+  createGroup(name: string, description: string, accountIds: string[]) {
+    return this.apiService.createGroup(name, description, accountIds).pipe(
       tap((response) => {
         if (response && response.group) {
           const updatedGroups = [...this.groups.getValue(), response.group];
@@ -203,5 +203,9 @@ export class DataService {
         error: (error) => console.error('Error updating event:', error.message),
       })
     );
+  }
+
+  searchAccounts(searchText: string): Observable<any[]> {
+    return this.apiService.searchAccounts(searchText);
   }
 }

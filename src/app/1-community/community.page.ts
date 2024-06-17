@@ -82,7 +82,7 @@ export class CommunityPage implements OnInit {
   fetchGroups() {
     this.dataService.getGroups().subscribe({
       next: (groups) => {
-        console.log(groups)
+        console.log(groups);
         this.groups = groups;
       },
       error: (error) => {
@@ -100,6 +100,11 @@ export class CommunityPage implements OnInit {
     this.router.navigate(['tabs', 'community', 'group'], navigationExtras);
   }
 
+  createGroup() {
+    this.router.navigate(['tabs', 'community', 'create-group'])
+  }
+
+  /*
   async createGroup() {
     const alert = await this.alertController.create({
       header: 'Create New Group',
@@ -146,4 +151,6 @@ export class CommunityPage implements OnInit {
 
     await alert.present();
   }
+*/
+
 }
