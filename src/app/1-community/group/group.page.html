@@ -1,13 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Group: {{ group.Name }}</ion-title>
+    <ion-title>Group: {{ (group$ | async)?.Name }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  @if (feedItems) { @for (entry of feedItems; track entry.index) { @if
-  (entry.feedType === "event") {
-  <ion-card (click)="openEvent(entry)">
+  @for (entry of (feedItems$ | async); track entry.index) { @if (entry.feedType
+  === "event") {
+  <ion-card (click)="openEvent(entry.EventID)">
     <ion-card-header>
       <ion-card-title>{{entry.Title}}</ion-card-title>
       <ion-card-subtitle>
@@ -17,7 +17,7 @@
     </ion-card-header>
   </ion-card>
   } @else if (entry.feedType === "poll") {
-  <ion-card (click)="openPoll(entry)">
+  <ion-card (click)="openPoll(entry.PollID)">
     <ion-card-header>
       <ion-card-title>{{entry.Title}}</ion-card-title>
       <ion-card-subtitle>
@@ -26,17 +26,7 @@
       </ion-card-subtitle>
     </ion-card-header>
   </ion-card>
-  } } } @else {feed is empty}
-
-  <!--
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="bubbles"
-        loadingText="Loading more data..."
-      >
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  -->
+  } }
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, Location, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -33,6 +33,7 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { FormatService } from 'src/app/services/format.service';
+import { Observable, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-group',
@@ -59,12 +60,13 @@ import { FormatService } from 'src/app/services/format.service';
     IonToolbar,
     CommonModule,
     FormsModule,
+    AsyncPipe,
   ],
 })
 export class GroupPage implements OnInit {
-  group?: any;
-  feedItems: any[] = [];
-  feedIndex?: number;
+  groupId?: string;
+  group$?: Observable<any>;
+  feedItems$?: Observable<any[]>;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,36 +89,19 @@ export class GroupPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
-        this.group =
-          this.router.getCurrentNavigation()?.extras.state?.['group'];
-        this.loadFeed();
+        this.groupId =
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
+        this.group$ = this.dataService.getGroup(this.groupId!);
+        this.feedItems$ = this.dataService.getGroupFeed(this.groupId!);
       }
-      console.log(['feedItems: ', this.feedItems]);
     });
   }
 
-  loadFeed(fetchMore: boolean = false) {
-    if (this.group && this.group.GroupID) {
-      this.dataService.getGroupFeed(this.group.GroupID, fetchMore).subscribe({
-        next: (data) => {
-          this.feedItems = fetchMore ? [...this.feedItems, ...data] : data;
-          console.log('feedItems after fetch: ', this.feedItems);
-        },
-        error: (error) => console.error('Failed to load group feed', error),
-      });
-    }
-  }
-
-  loadMore(event: any) {
-    this.loadFeed(true);
-    event.target.complete();
-  }
-
-  openPoll(poll: any) {
+  openPoll(pollId: any) {
     let navigationExtras: NavigationExtras = {
       state: {
-        poll: poll,
-        group: this.group,
+        pollId: pollId,
+        groupId: this.groupId,
       },
     };
     this.router.navigate(
@@ -125,11 +110,11 @@ export class GroupPage implements OnInit {
     );
   }
 
-  openEvent(event: any) {
+  openEvent(eventId: string) {
     let navigationExtras: NavigationExtras = {
       state: {
-        event: event,
-        group: this.group,
+        eventId: eventId,
+        groupId: this.groupId,
       },
     };
     this.router.navigate(
@@ -141,7 +126,7 @@ export class GroupPage implements OnInit {
   createPoll() {
     let navigationExtras: NavigationExtras = {
       state: {
-        groupID: this.group.GroupID,
+        groupId: this.groupId,
       },
     };
     this.router.navigate(
@@ -153,7 +138,7 @@ export class GroupPage implements OnInit {
   createEvent() {
     let navigationExtras: NavigationExtras = {
       state: {
-        groupID: this.group.GroupID,
+        groupId: this.groupId,
       },
     };
     this.router.navigate(
@@ -191,9 +176,8 @@ export class GroupPage implements OnInit {
         {
           text: 'Delete',
           handler: () => {
-            this.dataService.deleteGroup(this.group.GroupID).subscribe({
+            this.dataService.deleteGroup(this.groupId!).subscribe({
               next: (_) => {
-                console.log('Group deleted successfully');
                 this.location.back();
               },
               error: (err) => console.error('Failed to delete group', err),
@@ -259,7 +243,7 @@ export class GroupPage implements OnInit {
           text: 'Add',
           handler: (accountId) => {
             this.dataService
-              .addMemberToGroup(this.group.GroupID, accountId)
+              .addMemberToGroup(this.groupId!, accountId)
               .subscribe({
                 next: () => console.log('Member added successfully'),
                 error: (error) => console.error('Error adding member:', error),
@@ -273,9 +257,10 @@ export class GroupPage implements OnInit {
   }
 
   async removeGroupMember() {
+    const group = await firstValueFrom(this.group$!.pipe());
     const memberAlert = await this.alertController.create({
       header: 'Remove Group Members',
-      inputs: this.group.members.map((member: any) => ({
+      inputs: group.members.map((member: any) => ({
         name: 'selectedMembers',
         type: 'checkbox',
         label: `${member.FirstName} ${member.LastName}`,
@@ -291,9 +276,12 @@ export class GroupPage implements OnInit {
           handler: (selectedAccountIds) => {
             selectedAccountIds.forEach((accountId: any) => {
               this.dataService
-                .removeMemberFromGroup(this.group.GroupID, accountId)
+                .removeMemberFromGroup(this.groupId!, accountId)
                 .subscribe({
-                  next: () => console.log('Member removed successfully'),
+                  next: () => {
+                    console.log('Member removed successfully');
+                    this.group$ = this.dataService.getGroup(this.groupId!);
+                  },
                   error: (error) =>
                     console.error('Error removing member:', error),
                 });

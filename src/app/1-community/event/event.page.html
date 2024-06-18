@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Event: {{event.Title}}</ion-title>
+    <ion-title>Event: {{(event$ | async)?.Title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,27 +13,32 @@
       <ion-item>
         <ion-icon name="location-outline" slot="start"></ion-icon>
         <ion-label>Location</ion-label>
-        <ion-text>{{ event.Location }}</ion-text>
+        <ion-text>{{ (event$ | async)?.Location }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-icon name="today-outline" slot="start"></ion-icon>
         <ion-label>Date</ion-label>
-        <ion-text>{{ formatService.formatDate(event.Date) }}</ion-text>
+        <ion-text
+          >{{ formatService.formatDate((event$ | async)?.Date) }}</ion-text
+        >
       </ion-item>
       <ion-item>
         <ion-icon name="time-outline" slot="start"></ion-icon>
         <ion-label>Duration</ion-label>
-        <ion-text>{{ formatService.formatDuration(event.Duration) }}</ion-text>
+        <ion-text
+          >{{ formatService.formatDuration((event$ | async)?.Duration)
+          }}</ion-text
+        >
       </ion-item>
       <ion-item>
         <ion-icon name="pricetag-outline" slot="start"></ion-icon>
         <ion-label>Type</ion-label>
-        <ion-text>{{ event.eventType.Label }}</ion-text>
+        <ion-text>{{ (event$ | async)?.eventType.Label }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-icon name="information-circle-outline" slot="start"></ion-icon>
         <ion-label>Description</ion-label>
-        <ion-text>{{ event.Description }}</ion-text>
+        <ion-text>{{ (event$ | async)?.Description }}</ion-text>
       </ion-item>
     </ion-item-group>
 

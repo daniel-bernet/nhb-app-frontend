@@ -228,4 +228,27 @@ export class ApiService {
     const headers = this.createAuthHeaders();
     return this.httpClient.request<any>('delete', url, { headers, body });
   }
+
+  getGroup(groupId: string): Observable<any> {
+    const url = `${this.api_domain}/group/info/${groupId}`;
+    const headers = this.createAuthHeaders();
+    return this.httpClient.get<any>(url, { headers });
+  }
+
+  deletePoll(pollId: string): Observable<any> {
+    const url = `${this.api_domain}/poll/delete/${pollId}`;
+    return this.httpClient.delete<any>(url, {
+      headers: this.createAuthHeaders(),
+    });
+  }
+
+  editPoll(
+    pollId: string,
+    updateData: { title: string; description: string }
+  ): Observable<any> {
+    const url = `${this.api_domain}/poll/edit/${pollId}`;
+    return this.httpClient.patch<any>(url, updateData, {
+      headers: this.createAuthHeaders(),
+    });
+  }
 }

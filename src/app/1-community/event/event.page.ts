@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -36,6 +36,7 @@ import {
   todayOutline,
   trashOutline,
 } from 'ionicons/icons';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-event',
@@ -60,18 +61,21 @@ import {
     IonToolbar,
     CommonModule,
     FormsModule,
+    AsyncPipe,
   ],
 })
 export class EventPage implements OnInit {
-  group?: any;
-  event?: any;
+  eventId?: string;
+  groupId?: string;
+  event$?: Observable<any>;
 
   constructor(
     private alertController: AlertController,
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
-    protected formatService: FormatService
+    protected formatService: FormatService,
+    private location: Location
   ) {
     addIcons({
       locationOutline,
@@ -91,10 +95,14 @@ export class EventPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
-        this.group =
-          this.router.getCurrentNavigation()?.extras.state?.['group'];
-        this.event =
-          this.router.getCurrentNavigation()?.extras.state?.['event'];
+        this.eventId =
+          this.router.getCurrentNavigation()?.extras.state?.['eventId'];
+        this.groupId =
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
+        this.event$ = this.dataService.getFeedEntry(
+          this.eventId!,
+          this.groupId!
+        );
       }
     });
   }
@@ -113,18 +121,10 @@ export class EventPage implements OnInit {
           text: 'Yes, Delete it',
           role: 'destructive',
           handler: () => {
-            this.dataService.deleteEvent(this.event.EventID).subscribe({
+            this.dataService.deleteEvent(this.eventId!).subscribe({
               next: () => {
                 console.log('Event deleted successfully');
-                let navigationExtras: NavigationExtras = {
-                  state: {
-                    group: this.group,
-                  },
-                };
-                this.router.navigate(
-                  ['tabs', 'community', 'group'],
-                  navigationExtras
-                );
+                this.location.back();
               },
               error: (error) => {
                 console.error('Failed to delete the event:', error);
@@ -139,60 +139,62 @@ export class EventPage implements OnInit {
   }
 
   async editEvent() {
-    const alert = await this.alertController.create({
-      header: 'Edit Event',
-      inputs: [
-        {
-          name: 'title',
-          type: 'text',
-          placeholder: 'Event Title',
-          value: this.event.Title,
-        },
-        {
-          name: 'description',
-          type: 'text',
-          placeholder: 'Description',
-          value: this.event.Description,
-        },
-        {
-          name: 'location',
-          type: 'text',
-          placeholder: 'Location',
-          value: this.event.Location,
-        },
-        {
-          name: 'date',
-          type: 'date',
-          value: this.event.Date.split('T')[0],
-        },
-        {
-          name: 'duration',
-          type: 'number',
-          placeholder: 'Duration in minutes',
-          value: this.event.Duration,
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Save',
-          handler: (data) => {
-            if (this.validateEventData(data)) {
-              this.updateEvent(data);
-              return true;
-            } else {
-              this.showValidationError();
-              return false;
-            }
+    this.event$!.subscribe(async (event: any) => {
+      const alert = await this.alertController.create({
+        header: 'Edit Event',
+        inputs: [
+          {
+            name: 'title',
+            type: 'text',
+            placeholder: 'Event Title',
+            value: event.Title,
           },
-        },
-      ],
-    });
+          {
+            name: 'description',
+            type: 'text',
+            placeholder: 'Description',
+            value: event.Description,
+          },
+          {
+            name: 'location',
+            type: 'text',
+            placeholder: 'Location',
+            value: event.Location,
+          },
+          {
+            name: 'date',
+            type: 'date',
+            value: event.Date.split('T')[0],
+          },
+          {
+            name: 'duration',
+            type: 'number',
+            placeholder: 'Duration in minutes',
+            value: event.Duration,
+          },
+        ],
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+          },
+          {
+            text: 'Save',
+            handler: (data) => {
+              if (this.validateEventData(data)) {
+                this.updateEvent(data);
+                return true;
+              } else {
+                this.showValidationError();
+                return false;
+              }
+            },
+          },
+        ],
+      });
 
-    await alert.present();
+      await alert.present();
+    });
   }
 
   validateEventData(data: any): boolean {
@@ -217,7 +219,7 @@ export class EventPage implements OnInit {
 
   updateEvent(data: any) {
     this.dataService
-      .editEvent(this.event.EventID, {
+      .editEvent(this.eventId!, {
         Title: data.title,
         Description: data.description,
         Location: data.location,
@@ -227,7 +229,6 @@ export class EventPage implements OnInit {
       .subscribe({
         next: () => {
           console.log('Event updated successfully');
-          // this.router.navigateByUrl('/events');    stay on event or navigate to group page????
         },
         error: (error) => {
           console.error('Failed to update the event:', error);

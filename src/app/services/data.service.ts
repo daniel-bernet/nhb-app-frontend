@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -36,10 +45,6 @@ export class DataService {
     return this.types.asObservable();
   }
 
-  refreshUserInformation() {
-    this.fetchUserInformation();
-  }
-
   private fetchUserInformation() {
     this.apiService.getAccountInfo().subscribe({
       next: (data) => this.userInformation.next(data),
@@ -69,6 +74,25 @@ export class DataService {
     return this.groups.asObservable();
   }
 
+  getGroup(groupId: string): Observable<any> {
+    return this.groups.pipe(
+      map((groups) => groups.find((g) => g.GroupID === groupId)),
+      switchMap((group) => {
+        //if (group) {
+        return of(group);
+        //}
+        //else { throws error when group is deleted for api call for inexistent groupId
+        //  return this.apiService.getGroup(groupId).pipe(
+        //    tap((fetchedGroup) => {
+        //      const currentGroups = this.groups.getValue();
+        //      this.groups.next([...currentGroups, fetchedGroup]);
+        //    })
+        //  );
+        //}
+      })
+    );
+  }
+
   refreshGroups() {
     this.apiService.getBasicGroupInformation().subscribe({
       next: (data) => this.groups.next(data.groups),
@@ -80,38 +104,75 @@ export class DataService {
   createGroup(name: string, description: string, accountIds: string[]) {
     return this.apiService.createGroup(name, description, accountIds).pipe(
       tap((response) => {
-        if (response && response.group) {
-          const updatedGroups = [...this.groups.getValue(), response.group];
-          this.groups.next(updatedGroups);
+        if (response) {
+          this.refreshGroups();
         }
       })
     );
   }
 
-  getGroupFeed(groupId: string, fetchMore = false): Observable<any[]> {
+  getGroupFeed(groupId: string): Observable<any[]> {
     if (!this.groupFeeds.has(groupId)) {
       this.groupFeeds.set(groupId, new BehaviorSubject<any[]>([]));
     }
 
     const feed = this.groupFeeds.get(groupId);
 
-    if (feed!.getValue().length === 0 || fetchMore) {
-      const start = fetchMore ? feed!.getValue().length : 0;
-      this.apiService.getGroupFeed(groupId, start).subscribe({
-        next: (data) => {
-          console.log('fetched group feed delivered from API: ', data);
-          const currentFeed = feed!.getValue();
-          const updatedFeed = fetchMore
-            ? [...currentFeed, ...data.data]
-            : data.data;
-          feed!.next(updatedFeed);
-        },
-        error: (error) =>
-          console.error(`Failed to fetch feed for group ${groupId}`, error),
-      });
-    }
+    this.apiService.getGroupFeed(groupId).subscribe({
+      next: (data) => {
+        console.log('fetched group feed delivered from API: ', data);
+        const updatedFeed = data.data;
+        feed!.next(updatedFeed);
+      },
+      error: (error) =>
+        console.error(`Failed to fetch feed for group ${groupId}`, error),
+    });
 
     return feed!.asObservable();
+  }
+
+  getFeedEntry(feedId: string, groupId: string): Observable<any> {
+    if (!this.groupFeeds.has(groupId)) {
+      this.getGroupFeed(groupId);
+    }
+
+    return this.groupFeeds.get(groupId)!.pipe(
+      map((feed) => {
+        const entry = feed.find(
+          (entry) => entry.EventID === feedId || entry.PollID === feedId
+        );
+        if (!entry) {
+          return throwError(() => new Error('Feed entry not found'));
+        }
+        return entry;
+      }),
+      catchError((error) => {
+        console.error('Error accessing feed entry:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getQuestion(
+    groupId: string,
+    pollId: string,
+    questionId: string
+  ): Observable<any> {
+    return this.getFeedEntry(pollId, groupId).pipe(
+      switchMap((poll) => {
+        const question = poll.questions.find(
+          (q: any) => q.QuestionID === questionId
+        );
+        if (!question) {
+          return throwError(() => new Error('Question not found'));
+        }
+        return of(question);
+      }),
+      catchError((error) => {
+        console.error('Error fetching question:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   createPoll(
@@ -209,17 +270,19 @@ export class DataService {
     return this.apiService.searchAccounts(searchText);
   }
 
-  openPoll(pollId: string): Observable<any> {
+  openPoll(pollId: string, groupId: string): Observable<any> {
     return this.apiService.openPoll(pollId).pipe(
       tap({
+        next: () => this.getGroupFeed(groupId),
         error: (error) => console.error('Error opening poll', error),
       })
     );
   }
 
-  closePoll(pollId: string): Observable<any> {
+  closePoll(pollId: string, groupId: string): Observable<any> {
     return this.apiService.closePoll(pollId).pipe(
       tap({
+        next: () => this.getGroupFeed(groupId),
         error: (error) => console.error('Error closing poll', error),
       })
     );
@@ -241,23 +304,14 @@ export class DataService {
   deleteGroup(groupId: string): Observable<any> {
     return this.apiService.deleteGroup(groupId).pipe(
       tap({
-        next: (response) => {
-          this.updateGroupsAfterDeletion(groupId);
-          console.log('Group deleted successfully:', response);
+        next: () => {
+          this.refreshGroups();
         },
         error: (error) => {
           console.error('Error deleting group:', error);
         },
       })
     );
-  }
-
-  private updateGroupsAfterDeletion(groupId: string) {
-    const currentGroups = this.groups.getValue();
-    const updatedGroups = currentGroups.filter(
-      (group) => group.groupId !== groupId
-    );
-    this.groups.next(updatedGroups);
   }
 
   addMemberToGroup(groupId: string, accountId: string): Observable<any> {
@@ -276,6 +330,29 @@ export class DataService {
         error: (error) => {
           console.error('Error removing member from group:', error);
         },
+      })
+    );
+  }
+
+  deletePoll(pollId: string, groupId: string): Observable<any> {
+    return this.apiService.deletePoll(pollId).pipe(
+      tap({
+        next: (response) => this.getGroupFeed(groupId),
+        error: (error) => console.error('Failed to delete poll:', error),
+      })
+    );
+  }
+
+  editPoll(
+    pollId: string,
+    title: string,
+    description: string,
+    groupId: string
+  ): Observable<any> {
+    return this.apiService.editPoll(pollId, { title, description }).pipe(
+      tap({
+        next: (response) => this.getGroupFeed(groupId),
+        error: (error) => console.error('Failed to update poll:', error),
       })
     );
   }

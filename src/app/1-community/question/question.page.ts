@@ -6,7 +6,6 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  AlertController,
   IonList,
   IonItemGroup,
   IonItemDivider,
@@ -21,22 +20,17 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { FormatService } from 'src/app/services/format.service';
-import { ResponseIndicatorComponent } from '../../components/response-indicator/response-indicator.component';
 import {
   alertCircleOutline,
-  buildOutline,
   checkmarkCircleOutline,
   closeCircleOutline,
-  ellipsisVerticalOutline,
   helpCircleOutline,
   informationCircleOutline,
-  peopleOutline,
-  statsChartOutline,
   timeOutline,
   todayOutline,
-  trashOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-question',
@@ -60,43 +54,45 @@ import { addIcons } from 'ionicons';
     IonToolbar,
     CommonModule,
     FormsModule,
-    ResponseIndicatorComponent,
   ],
 })
 export class QuestionPage implements OnInit {
-  group?: any;
-  question?: any;
+  groupId?: string;
+  questionId?: string;
+  pollId?: string;
+  question$?: Observable<any>;
 
   constructor(
-    private alertController: AlertController,
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
     protected formatService: FormatService
   ) {
     addIcons({
-      peopleOutline,
       todayOutline,
       timeOutline,
-      statsChartOutline,
       informationCircleOutline,
       checkmarkCircleOutline,
       closeCircleOutline,
       alertCircleOutline,
       helpCircleOutline,
-      ellipsisVerticalOutline,
-      buildOutline,
-      trashOutline,
     });
   }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
-        this.group =
-          this.router.getCurrentNavigation()?.extras.state?.['group'];
-        this.question =
-          this.router.getCurrentNavigation()?.extras.state?.['question'];
+        this.groupId =
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
+        this.questionId =
+          this.router.getCurrentNavigation()?.extras.state?.['questionId'];
+        this.pollId =
+          this.router.getCurrentNavigation()?.extras.state?.['pollId'];
+        this.question$ = this.dataService.getQuestion(
+          this.groupId!,
+          this.pollId!,
+          this.questionId!
+        );
       }
     });
   }
@@ -135,13 +131,5 @@ export class QuestionPage implements OnInit {
     responseCounts.set('unanswered', unansweredResponse);
 
     return responseCounts;
-  }
-
-  deleteQuestion() {
-    throw new Error('Method not implemented.');
-  }
-
-  editQuestion() {
-    throw new Error('Method not implemented.');
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -35,6 +35,7 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { ResponseIndicatorComponent } from 'src/app/components/response-indicator/response-indicator.component';
+import { Observable, first, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-poll',
@@ -63,15 +64,18 @@ import { ResponseIndicatorComponent } from 'src/app/components/response-indicato
   ],
 })
 export class PollPage implements OnInit {
-  group?: any;
-  poll?: any;
+  groupId?: string;
+  pollId?: string;
+  group$?: Observable<any>;
+  poll$?: Observable<any>;
 
   constructor(
     private alertController: AlertController,
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
-    protected formatService: FormatService
+    protected formatService: FormatService,
+    private location: Location
   ) {
     addIcons({
       lockClosedOutline,
@@ -89,26 +93,94 @@ export class PollPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
-        this.group =
-          this.router.getCurrentNavigation()?.extras.state?.['group'];
-        this.poll = this.router.getCurrentNavigation()?.extras.state?.['poll'];
+        this.groupId =
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
+        this.pollId =
+          this.router.getCurrentNavigation()?.extras.state?.['pollId'];
+        this.group$ = this.dataService.getGroup(this.groupId!);
+        this.poll$ = this.dataService.getFeedEntry(this.pollId!, this.groupId!);
       }
     });
   }
 
-  deletePoll() {
-    throw new Error('Method not implemented.');
+  async deletePoll() {
+    const alert = await this.alertController.create({
+      header: 'Confirm Deletion',
+      message:
+        'Are you sure you want to delete this poll and all its related data?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.dataService.deletePoll(this.pollId!, this.groupId!).subscribe({
+              next: () => {
+                this.location.back();
+              },
+              error: (error) => console.error('Failed to delete poll:', error),
+            });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
-  editPoll() {
-    throw new Error('Method not implemented.');
+  async editPoll() {
+    const poll = await firstValueFrom(this.poll$!.pipe());
+
+    const alert = await this.alertController.create({
+      header: 'Edit Poll',
+      inputs: [
+        {
+          name: 'title',
+          type: 'text',
+          placeholder: 'Title',
+          value: poll.Title,
+        },
+        {
+          name: 'description',
+          type: 'text',
+          placeholder: 'Description',
+          value: poll.Description,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Save',
+          handler: (data) => {
+            this.dataService
+              .editPoll(
+                this.pollId!,
+                data.title,
+                data.description,
+                this.groupId!
+              )
+              .subscribe({
+                error: (error) =>
+                  console.error('Failed to update poll:', error),
+              });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   answerPoll() {
     let navigationExtras: NavigationExtras = {
       state: {
-        poll: this.poll,
-        group: this.group,
+        pollId: this.pollId,
+        groupId: this.groupId,
       },
     };
     this.router.navigate(
@@ -117,33 +189,32 @@ export class PollPage implements OnInit {
     );
   }
 
-  openClosePoll() {
-    if (this.poll) {
-      const operation = this.poll.IsClosed ? 'open' : 'close';
-      const action =
-        operation === 'open'
-          ? this.dataService.openPoll
-          : this.dataService.closePoll;
+  async openClosePoll() {
+    const poll = await firstValueFrom(this.poll$!.pipe());
 
-      action.call(this.dataService, this.poll.PollID).subscribe({
-        next: (response) => {
-          console.log(`Poll ${operation}ed successfully:`, response);
-          this.poll.IsClosed = !this.poll.IsClosed;
-        },
-        error: (error) => {
-          console.error(`Failed to ${operation} the poll:`, error);
-        },
-      });
-    } else {
-      console.error('Poll data is not available.');
-    }
+    const operation = poll.IsClosed ? 'open' : 'close';
+
+    const action =
+      operation === 'open'
+        ? this.dataService.openPoll
+        : this.dataService.closePoll;
+
+    action.call(this.dataService, this.pollId!, this.groupId!).subscribe({
+      next: (response) => {
+        console.log(`Poll ${operation}ed successfully:`, response);
+      },
+      error: (error) => {
+        console.error(`Failed to ${operation} the poll:`, error);
+      },
+    });
   }
 
-  openQuestion(question: any) {
+  openQuestion(questionId: string) {
     let navigationExtras: NavigationExtras = {
       state: {
-        question: question,
-        group: this.group,
+        questionId: questionId,
+        groupId: this.groupId,
+        pollId: this.pollId,
       },
     };
     this.router.navigate(

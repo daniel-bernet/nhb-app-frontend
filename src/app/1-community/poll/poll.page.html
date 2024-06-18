@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Poll: {{ poll.Title }}</ion-title>
+    <ion-title>Poll: {{ (poll$ | async).Title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -11,28 +11,28 @@
         <ion-label> Poll details </ion-label>
       </ion-item-divider>
       <ion-item>
-        @if(poll.IsClosed) {
+        @if((poll$ | async).IsClosed) {
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
         } @else {
         <ion-icon name="lock-open-outline" slot="start"></ion-icon>
         }
         <ion-label>Accepting responses</ion-label>
-        <ion-text>{{ !poll.IsClosed }}</ion-text>
+        <ion-text>{{ !(poll$ | async).IsClosed }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-icon name="pricetag-outline" slot="start"></ion-icon>
         <ion-label>Type</ion-label>
-        <ion-text>{{ poll.pollType.Label }}</ion-text>
+        <ion-text>{{ (poll$ | async).pollType.Label }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-icon name="people-outline" slot="start"></ion-icon>
         <ion-label>Group</ion-label>
-        <ion-text>{{ group.Name }}</ion-text>
+        <ion-text>{{ (group$ | async).Name }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-icon name="information-circle-outline" slot="start"></ion-icon>
         <ion-label>Description</ion-label>
-        <ion-text>{{ poll.Description }}</ion-text>
+        <ion-text>{{ (poll$ | async).Description }}</ion-text>
       </ion-item>
     </ion-item-group>
 
@@ -40,8 +40,12 @@
       <ion-item-divider>
         <ion-label> Questions </ion-label>
       </ion-item-divider>
-      @for (question of poll.questions; track question.index) {
-      <ion-item button detail="true" (click)="openQuestion(question)">
+      @for (question of (poll$ | async).questions; track question.index) {
+      <ion-item
+        button
+        detail="true"
+        (click)="openQuestion(question.QuestionID)"
+      >
         <ion-label>
           <div>
             <ion-text> {{question.Question}} </ion-text>
@@ -67,11 +71,14 @@
       <ion-fab-button (click)="deletePoll()">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button (click)="answerPoll()" [disabled]="poll.IsClosed">
+      <ion-fab-button
+        (click)="answerPoll()"
+        [disabled]="(poll$ | async).IsClosed"
+      >
         <ion-icon name="checkbox-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="openClosePoll()">
-        @if(!poll.IsClosed) {
+        @if(!(poll$ | async).IsClosed) {
         <ion-icon name="lock-closed-outline"></ion-icon>
         } @else {
         <ion-icon name="lock-open-outline"></ion-icon>

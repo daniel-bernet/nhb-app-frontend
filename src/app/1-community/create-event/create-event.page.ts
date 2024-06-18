@@ -58,7 +58,7 @@ export class CreateEventPage implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
         this.groupID =
-          this.router.getCurrentNavigation()?.extras.state?.['groupID'];
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
       }
       this.fetchTypes();
     });

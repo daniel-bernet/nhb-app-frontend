@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import {
   IonHeader,
@@ -24,11 +24,12 @@ import {
   IonCardSubtitle,
   IonText,
   IonLoading,
-  AlertController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { add, peopleOutline } from 'ionicons/icons';
 import { DataService } from '../services/data.service';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common'
 
 @Component({
   selector: 'app-community',
@@ -59,42 +60,28 @@ import { DataService } from '../services/data.service';
     IonToolbar,
     IonTitle,
     IonContent,
+    AsyncPipe,
   ],
 })
 export class CommunityPage implements OnInit {
-  constructor(
-    private router: Router,
-    private dataService: DataService,
-    private alertController: AlertController
-  ) {
+  groups$?: Observable<any[]>;
+  
+  constructor(private router: Router, private dataService: DataService) {
     addIcons({
       add,
       peopleOutline,
     });
   }
 
-  groups: any[] = [];
 
   ngOnInit() {
-    this.fetchGroups();
-  }
-
-  fetchGroups() {
-    this.dataService.getGroups().subscribe({
-      next: (groups) => {
-        console.log(groups);
-        this.groups = groups;
-      },
-      error: (error) => {
-        console.error('Failed to fetch groups', error);
-      },
-    });
+    this.groups$ = this.dataService.getGroups();
   }
 
   openGroup(group: any) {
     let navigationExtras: NavigationExtras = {
       state: {
-        group: group,
+        groupId: group.GroupID,
       },
     };
     this.router.navigate(['tabs', 'community', 'group'], navigationExtras);

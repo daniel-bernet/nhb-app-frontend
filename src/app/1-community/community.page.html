@@ -5,13 +5,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" id="community">
-  @if (!groups) {
-  <ion-loading></ion-loading>
-  } @else if (groups.length === 0) {
-  <ion-text>
-    Not part of any groups, try creating one using the action-button!
-  </ion-text>
-  } @else { @for (group of groups; track group) {
+  @for (group of (groups$ | async); track group) {
   <ion-card (click)="openGroup(group)">
     <ion-card-header>
       <ion-card-title>{{group.Name}}</ion-card-title>
@@ -21,7 +15,7 @@
       </ion-card-subtitle>
     </ion-card-header>
   </ion-card>
-  } }
+  }
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button>
