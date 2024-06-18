@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, Location, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -20,18 +20,18 @@ import {
   AlertController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { FormatService } from 'src/app/services/format.service';
 import {
   checkboxOutline,
   helpCircleOutline,
   informationCircleOutline,
-  peopleOutline,
   pricetagOutline,
   timeOutline,
   todayOutline,
 } from 'ionicons/icons';
+import { Observable, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-answer-poll',
@@ -56,11 +56,13 @@ import {
     FormsModule,
     IonSelect,
     IonSelectOption,
+    AsyncPipe,
   ],
 })
 export class AnswerPollPage implements OnInit {
-  group?: any;
-  poll?: any;
+  groupId?: string;
+  pollId?: string;
+  poll$?: Observable<any>;
   answers: Map<string, string> = new Map(); // questionID, optionID
 
   constructor(
@@ -73,7 +75,6 @@ export class AnswerPollPage implements OnInit {
   ) {
     addIcons({
       pricetagOutline,
-      peopleOutline,
       informationCircleOutline,
       helpCircleOutline,
       todayOutline,
@@ -85,9 +86,11 @@ export class AnswerPollPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
-        this.group =
-          this.router.getCurrentNavigation()?.extras.state?.['group'];
-        this.poll = this.router.getCurrentNavigation()?.extras.state?.['poll'];
+        this.groupId =
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
+        this.pollId =
+          this.router.getCurrentNavigation()?.extras.state?.['pollId'];
+        this.poll$ = this.dataService.getFeedEntry(this.pollId!, this.groupId!);
       }
     });
   }
@@ -97,7 +100,9 @@ export class AnswerPollPage implements OnInit {
   }
 
   async submitAnswer() {
-    if (this.answers.size !== this.poll.questions.length) {
+    const poll = await firstValueFrom(this.poll$!.pipe());
+
+    if (this.answers.size !== poll.questions.length) {
       const alert = await this.alertController.create({
         header: 'Incomplete Answers',
         message: 'Please answer all questions before submitting.',
@@ -114,7 +119,7 @@ export class AnswerPollPage implements OnInit {
       })
     );
 
-    this.dataService.submitAnswers(this.poll.PollID, answersArray).subscribe({
+    this.dataService.submitAnswers(poll.PollID, answersArray).subscribe({
       next: () => {
         this.location.back();
       },

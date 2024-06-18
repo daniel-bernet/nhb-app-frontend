@@ -66,6 +66,14 @@ export class CreateGroupPage implements OnInit {
         this.groupMembers =
           this.router.getCurrentNavigation()?.extras.state?.['accounts'];
       }
+      if (this.router.getCurrentNavigation()?.extras.state?.['groupName']) {
+        this.groupName =
+          this.router.getCurrentNavigation()?.extras.state?.['groupName'];
+      }
+      if (this.router.getCurrentNavigation()?.extras.state?.['groupDescription']) {
+        this.groupDescription =
+          this.router.getCurrentNavigation()?.extras.state?.['groupDescription'];
+      }
     });
   }
 

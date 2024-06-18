@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Answer: {{ poll.Title }}</ion-title>
+    <ion-title>Answer: {{ (poll$ | async).Title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,21 +13,17 @@
       <ion-item>
         <ion-icon name="pricetag-outline" slot="start"></ion-icon>
         <ion-label>Type</ion-label>
-        <ion-text>{{ poll.pollType.Label }}</ion-text>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="people-outline" slot="start"></ion-icon>
-        <ion-label>Group</ion-label>
-        <ion-text>{{ group.Name }}</ion-text>
+        <ion-text>{{ (poll$ | async).pollType.Label }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-icon name="information-circle-outline" slot="start"></ion-icon>
         <ion-label>Description</ion-label>
-        <ion-text>{{ poll.Description }}</ion-text>
+        <ion-text>{{ (poll$ | async).Description }}</ion-text>
       </ion-item>
     </ion-item-group>
 
-    @for (question of poll.questions; track question.index; let i = $index) {
+    @for (question of (poll$ | async).questions; track question.index; let i =
+    $index) {
     <ion-item-group>
       <ion-item-divider>
         <ion-label> Question {{ i + 1 }} </ion-label>

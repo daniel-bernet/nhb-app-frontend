@@ -60,6 +60,27 @@ export class CreateEventPage implements OnInit {
         this.groupID =
           this.router.getCurrentNavigation()?.extras.state?.['groupId'];
       }
+      if (this.router.getCurrentNavigation()?.extras.state?.['eventTitle']) {
+        this.eventTitle =
+          this.router.getCurrentNavigation()?.extras.state?.['eventTitle'];
+      }
+      if (
+        this.router.getCurrentNavigation()?.extras.state?.['eventDescription']
+      ) {
+        this.eventDescription =
+          this.router.getCurrentNavigation()?.extras.state?.[
+            'eventDescription'
+          ];
+      }
+      if (this.router.getCurrentNavigation()?.extras.state?.['eventDate']) {
+        this.eventDate = this.router
+          .getCurrentNavigation()
+          ?.extras.state?.['eventDate'].split('T')[0];
+      }
+      if (this.router.getCurrentNavigation()?.extras.state?.['eventDuration']) {
+        this.eventDuration =
+          this.router.getCurrentNavigation()?.extras.state?.['eventDuration'];
+      }
       this.fetchTypes();
     });
   }

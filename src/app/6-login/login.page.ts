@@ -10,7 +10,6 @@ import {
   IonButton,
   IonItem,
   IonCard,
-  IonNavLink,
   IonIcon,
   AlertController,
 } from '@ionic/angular/standalone';
@@ -26,7 +25,6 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     IonIcon,
-    IonNavLink,
     IonCard,
     IonItem,
     IonButton,
@@ -67,7 +65,7 @@ export class LoginPage {
       return;
     }
 
-    this.authService?.login(this.email, this.password).subscribe({
+    this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         this.router.navigateByUrl('/tabs/community');
       },

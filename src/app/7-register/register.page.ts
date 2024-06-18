@@ -39,9 +39,13 @@ export class RegisterPage {
   passwordConfirm: string = '';
   errorMessage: string = '';
 
-  constructor(private router: Router, private authService: AuthService, private alertController: AlertController) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private alertController: AlertController
+  ) {}
 
-  register(): void {
+  async register(): Promise<void> {
     if (
       this.firstName === '' ||
       this.lastName === '' ||

@@ -40,11 +40,17 @@ export class AuthService {
       'Content-Type': 'application/json',
     });
 
-    return this.httpClient.post<any>(url, body, { headers });
+    return this.httpClient.post<any>(url, body, { headers }).pipe(
+      tap((response) => {
+        if (response && response.token) {
+          this.jwt_token = response.token;
+        }
+      })
+    );
   }
 
   getJWT() {
-    console.log('the jwt token is:',this.jwt_token);
+    console.log('the jwt token is:', this.jwt_token);
     return this.jwt_token;
   }
 

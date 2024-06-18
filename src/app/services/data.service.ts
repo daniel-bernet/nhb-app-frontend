@@ -292,7 +292,7 @@ export class DataService {
     return this.apiService.submitAnswers(pollId, answers).pipe(
       tap({
         next: (response) => {
-          console.log('Answers submitted successfully:', response);
+          this.refreshGroups();
         },
         error: (error) => {
           console.error('Failed to submit answers:', error);
@@ -317,6 +317,9 @@ export class DataService {
   addMemberToGroup(groupId: string, accountId: string): Observable<any> {
     return this.apiService.addMemberToGroup(groupId, accountId).pipe(
       tap({
+        next: () => {
+          this.refreshGroups();
+        },
         error: (error) => {
           console.error('Error adding member to group:', error);
         },
@@ -327,6 +330,9 @@ export class DataService {
   removeMemberFromGroup(groupId: string, accountId: string): Observable<any> {
     return this.apiService.removeMemberFromGroup(groupId, accountId).pipe(
       tap({
+        next: () => {
+          this.refreshGroups();
+        },
         error: (error) => {
           console.error('Error removing member from group:', error);
         },

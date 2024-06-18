@@ -16,8 +16,10 @@ import {
   IonFab,
   IonFabButton,
   IonFabList,
+  IonButton,
+  AlertController,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { FormatService } from 'src/app/services/format.service';
 import {
@@ -30,7 +32,7 @@ import {
   todayOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-question',
@@ -38,6 +40,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./question.page.scss'],
   standalone: true,
   imports: [
+    IonButton,
     IonFabList,
     IonFabButton,
     IonFab,
@@ -66,7 +69,8 @@ export class QuestionPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
-    protected formatService: FormatService
+    protected formatService: FormatService,
+    private alertController: AlertController
   ) {
     addIcons({
       todayOutline,
@@ -131,5 +135,78 @@ export class QuestionPage implements OnInit {
     responseCounts.set('unanswered', unansweredResponse);
 
     return responseCounts;
+  }
+
+  async createGroup() {
+    const question = await firstValueFrom(this.question$!.pipe());
+
+    const sortedMembers = question.answers
+      .sort((a: any, b: any) => {
+        const order: Record<any, number> = { y: 1, i: 2, n: 3, u: 4 };
+        const sentimentA = a.option.sentiment.Sentiment as any;
+        const sentimentB = b.option.sentiment.Sentiment as any;
+        return order[sentimentA] - order[sentimentB];
+      })
+      .map((answer: any) => ({
+        ...answer.groupMember.account,
+        sentiment: answer.option.Option,
+      }));
+
+    const alert = await this.alertController.create({
+      header: 'Select members for the new group',
+      inputs: sortedMembers.map((member: any) => ({
+        type: 'checkbox',
+        label: `${this.formatService.formatName(
+          member.FirstName,
+          member.LastName
+        )} - ${member.sentiment}`,
+        value: member.AccountID,
+        checked: true,
+      })),
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Create Group',
+          handler: (selectedAccountIds) => {
+            const navigationExtras: NavigationExtras = {
+              state: {
+                accounts: sortedMembers.filter((member: any) =>
+                  selectedAccountIds.includes(member.AccountID)
+                ),
+                groupName: question.Question,
+                groupDescription: question.Description,
+              },
+            };
+            this.router.navigate(
+              ['tabs', 'community', 'create-group'],
+              navigationExtras
+            );
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async createEvent() {
+    const question = await firstValueFrom(this.question$!.pipe());
+
+    let navigationExtras: NavigationExtras = {
+      state: {
+        groupId: this.groupId,
+        eventTitle: question.Question,
+        eventDescription: question.Description,
+        eventDate: question.Date,
+        eventDuration: question.Duration,
+      },
+    };
+    this.router.navigate(
+      ['tabs', 'community', 'group', 'create-event'],
+      navigationExtras
+    );
   }
 }

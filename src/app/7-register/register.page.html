@@ -9,7 +9,6 @@
       fill="outline"
       placeholder="Your First Name"
       autocapitalize="words"
-      required="true"
       [(ngModel)]="firstName"
     ></ion-input>
     <ion-input
@@ -18,7 +17,6 @@
       fill="outline"
       placeholder="Your Last Name"
       autocapitalize="words"
-      required="true"
       [(ngModel)]="lastName"
     ></ion-input>
     <ion-input
@@ -27,7 +25,6 @@
       fill="outline"
       placeholder="your@email.com"
       labelPlacement="floating"
-      required="true"
       type="email"
       helperText="Enter a valid email"
       errorText="Invalid email"
@@ -41,7 +38,6 @@
       fill="outline"
       placeholder="password"
       type="password"
-      required="true"
       helperText="Min 8 characters, 1 lower- and upper-case letter and 1 number!"
       errorText="Invalid password"
       [(ngModel)]="password"
@@ -53,7 +49,6 @@
       fill="outline"
       placeholder="password"
       type="password"
-      required="true"
       errorText="Invalid password"
       [(ngModel)]="passwordConfirm"
       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"

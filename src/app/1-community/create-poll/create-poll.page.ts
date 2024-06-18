@@ -36,7 +36,7 @@ import { DataService } from 'src/app/services/data.service';
   ],
 })
 export class CreatePollPage implements OnInit {
-  groupID?: string;
+  groupId?: string;
   possibleTypes: any[] = [];
   errorMessage?: string;
   pollOptions: any[] = [];
@@ -64,8 +64,8 @@ export class CreatePollPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation()?.extras.state) {
-        this.groupID =
-          this.router.getCurrentNavigation()?.extras.state?.['groupID'];
+        this.groupId =
+          this.router.getCurrentNavigation()?.extras.state?.['groupId'];
       }
       this.fetchTypes();
       this.fetchPollOptions();
@@ -137,7 +137,7 @@ export class CreatePollPage implements OnInit {
 
     this.dataService
       .createPoll(
-        this.groupID!,
+        this.groupId!,
         this.selectedTypeID!,
         this.pollTitle,
         this.pollDescription,
