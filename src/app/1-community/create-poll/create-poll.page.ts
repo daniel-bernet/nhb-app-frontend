@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormControl, FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -12,7 +12,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonInput, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/angular/standalone';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -57,7 +57,8 @@ export class CreatePollPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    private location : Location
   ) {}
 
   ngOnInit() {
@@ -99,7 +100,6 @@ export class CreatePollPage implements OnInit {
   }
 
   setDefaultAnswerOptions() {
-    // Filter out the "unanswered" option and map to return only the IDs
     const preSelectedOptions = this.pollOptions
       .filter((option) => option.Option.toLowerCase() !== 'unanswered')
       .map((option) => option.OptionID);
@@ -146,15 +146,7 @@ export class CreatePollPage implements OnInit {
       .subscribe({
         next: () => {
           console.log('Poll created successfully');
-          let navigationExtras: NavigationExtras = {
-            state: {
-              groupID: this.groupID,
-            },
-          };
-          this.router.navigate(
-            ['tabs', 'community', 'group'],
-            navigationExtras
-          );
+          this.location.back();
         },
         error: (error) => {
           console.error('Failed to create poll:', error);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -51,7 +51,8 @@ export class CreateGroupPage implements OnInit {
     private router: Router,
     private dataService: DataService,
     protected formatService: FormatService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private location : Location
   ) {
     addIcons({
       personCircleOutline,
@@ -82,7 +83,7 @@ export class CreateGroupPage implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Group created successfully:', response);
-          this.router.navigate(['tabs', 'community']);
+          this.location.back();
         },
         error: (error) => {
           console.error('Failed to create the group:', error);

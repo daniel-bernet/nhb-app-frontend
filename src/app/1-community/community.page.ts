@@ -101,56 +101,6 @@ export class CommunityPage implements OnInit {
   }
 
   createGroup() {
-    this.router.navigate(['tabs', 'community', 'create-group'])
+    this.router.navigate(['tabs', 'community', 'create-group']);
   }
-
-  /*
-  async createGroup() {
-    const alert = await this.alertController.create({
-      header: 'Create New Group',
-      inputs: [
-        {
-          name: 'name',
-          type: 'text',
-          placeholder: 'Group Name',
-        },
-        {
-          name: 'description',
-          type: 'text',
-          placeholder: 'Description',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Create',
-          handler: (data) => {
-            if (data.name && data.description) {
-              this.dataService
-                .createGroup(data.name, data.description)
-                .subscribe({
-                  next: () => {
-                    console.log('Group created successfully');
-                  },
-                  error: (error) => {
-                    console.error('Failed to create group', error);
-                    return false;
-                  },
-                });
-              return true;
-            } else {
-              return false;
-            }
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-*/
-
 }

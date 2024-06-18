@@ -69,7 +69,7 @@ export class AnswerPollPage implements OnInit {
     private dataService: DataService,
     protected formatService: FormatService,
     private alertController: AlertController,
-    private location: Location,
+    private location: Location
   ) {
     addIcons({
       pricetagOutline,
@@ -116,17 +116,7 @@ export class AnswerPollPage implements OnInit {
 
     this.dataService.submitAnswers(this.poll.PollID, answersArray).subscribe({
       next: () => {
-        let navigationExtras: NavigationExtras = {
-          state: {
-            poll: this.poll,
-            group: this.group,
-          },
-        };
-        this.router.navigate(
-          ['tabs', 'community', 'group', 'poll'],
-          navigationExtras
-        );
-        this.location
+        this.location.back();
       },
       error: async (err) => {
         const alert = await this.alertController.create({

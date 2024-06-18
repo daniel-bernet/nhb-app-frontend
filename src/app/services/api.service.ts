@@ -208,4 +208,24 @@ export class ApiService {
 
     return this.httpClient.post<any>(url, body, { headers });
   }
+
+  deleteGroup(groupId: string): Observable<any> {
+    const url = `${this.api_domain}/group/delete/${groupId}`;
+    const headers = this.createAuthHeaders();
+    return this.httpClient.delete<any>(url, { headers });
+  }
+
+  addMemberToGroup(groupId: string, accountId: string): Observable<any> {
+    const url = `${this.api_domain}/group/add-member`;
+    const body = { groupId, manipulateAccountId: accountId };
+    const headers = this.createAuthHeaders();
+    return this.httpClient.post<any>(url, body, { headers });
+  }
+
+  removeMemberFromGroup(groupId: string, accountId: string): Observable<any> {
+    const url = `${this.api_domain}/group/remove-member`;
+    const body = { groupId, manipulateAccountId: accountId };
+    const headers = this.createAuthHeaders();
+    return this.httpClient.request<any>('delete', url, { headers, body });
+  }
 }

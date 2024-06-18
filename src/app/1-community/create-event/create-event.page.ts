@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
@@ -13,7 +13,7 @@ import {
   IonInput,
   IonItem,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -50,7 +50,8 @@ export class CreateEventPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataService: DataService
+    private dataService: DataService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -116,15 +117,7 @@ export class CreateEventPage implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Event created successfully:', response);
-          let navigationExtras: NavigationExtras = {
-            state: {
-              groupID: this.groupID,
-            },
-          };
-          this.router.navigate(
-            ['tabs', 'community', 'group'],
-            navigationExtras
-          );
+          this.location.back();
         },
         error: (error) => {
           console.error('Failed to create event:', error);

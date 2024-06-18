@@ -237,4 +237,46 @@ export class DataService {
       })
     );
   }
+
+  deleteGroup(groupId: string): Observable<any> {
+    return this.apiService.deleteGroup(groupId).pipe(
+      tap({
+        next: (response) => {
+          this.updateGroupsAfterDeletion(groupId);
+          console.log('Group deleted successfully:', response);
+        },
+        error: (error) => {
+          console.error('Error deleting group:', error);
+        },
+      })
+    );
+  }
+
+  private updateGroupsAfterDeletion(groupId: string) {
+    const currentGroups = this.groups.getValue();
+    const updatedGroups = currentGroups.filter(
+      (group) => group.groupId !== groupId
+    );
+    this.groups.next(updatedGroups);
+  }
+
+  addMemberToGroup(groupId: string, accountId: string): Observable<any> {
+    return this.apiService.addMemberToGroup(groupId, accountId).pipe(
+      tap({
+        error: (error) => {
+          console.error('Error adding member to group:', error);
+        },
+      })
+    );
+  }
+
+  removeMemberFromGroup(groupId: string, accountId: string): Observable<any> {
+    return this.apiService.removeMemberFromGroup(groupId, accountId).pipe(
+      tap({
+        error: (error) => {
+          console.error('Error removing member from group:', error);
+        },
+      })
+    );
+  }
 }
