@@ -67,10 +67,8 @@ export class DataService {
     });
   }
 
-  getGroups(): Observable<any[]> {
-    if (this.groups.getValue().length === 0) {
-      this.refreshGroups();
-    }
+  async getGroups(): Promise<Observable<any[]>> {
+    await this.refreshGroups();
     return this.groups.asObservable();
   }
 
@@ -93,7 +91,7 @@ export class DataService {
     );
   }
 
-  refreshGroups() {
+  async refreshGroups() {
     this.apiService.getBasicGroupInformation().subscribe({
       next: (data) => this.groups.next(data.groups),
       error: (error) =>

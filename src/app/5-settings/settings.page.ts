@@ -26,6 +26,7 @@ import {
 } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -51,7 +52,8 @@ export class SettingsPage {
   constructor(
     private apiService: ApiService,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     addIcons({
       keyOutline,
@@ -170,7 +172,8 @@ export class SettingsPage {
           role: 'destructive',
           handler: () => {
             this.apiService.deleteAccount().subscribe({
-              next: () => {
+              next: async () => {
+                await this.authService.voidJWT();
                 this.router.navigateByUrl('/login');
               },
               error: (err) => {
@@ -197,15 +200,9 @@ export class SettingsPage {
         {
           text: 'Log Out',
           role: 'destructive',
-          handler: () => {
-            this.apiService.logOut().subscribe({
-              next: () => {
-                this.router.navigateByUrl('/login');
-              },
-              error: (err) => {
-                console.error('Failed to delete account:', err);
-              },
-            });
+          handler: async () => {
+            await this.authService.voidJWT();
+            this.router.navigateByUrl('/login');
           },
         },
       ],

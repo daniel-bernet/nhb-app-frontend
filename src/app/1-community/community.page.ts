@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import {
   IonHeader,
@@ -29,7 +29,7 @@ import { addIcons } from 'ionicons';
 import { add, peopleOutline } from 'ionicons/icons';
 import { DataService } from '../services/data.service';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common'
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-community',
@@ -65,7 +65,7 @@ import { AsyncPipe } from '@angular/common'
 })
 export class CommunityPage implements OnInit {
   groups$?: Observable<any[]>;
-  
+
   constructor(private router: Router, private dataService: DataService) {
     addIcons({
       add,
@@ -73,9 +73,8 @@ export class CommunityPage implements OnInit {
     });
   }
 
-
-  ngOnInit() {
-    this.groups$ = this.dataService.getGroups();
+  async ngOnInit() {
+    this.groups$ = await this.dataService.getGroups();
   }
 
   openGroup(group: any) {

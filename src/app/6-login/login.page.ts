@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -37,7 +37,7 @@ import { Router } from '@angular/router';
     FormsModule,
   ],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   email: string = 'test@test.com'; // for easy dev, remove for production!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   password: string = 'Test1test';
   errorMessage?: string;
@@ -50,6 +50,12 @@ export class LoginPage {
     addIcons({
       eyeOutline,
     });
+  }
+
+  async ngOnInit() {
+    if (await this.authService.checkForJWT()) {
+      this.router.navigateByUrl('/tabs/community');
+    }
   }
 
   async login(): Promise<void> {
