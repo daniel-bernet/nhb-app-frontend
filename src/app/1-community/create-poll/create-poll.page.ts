@@ -131,7 +131,7 @@ export class CreatePollPage implements OnInit {
       this.questions.length === 0
     ) {
       this.errorMessage =
-        'Please fill out all required fields and add at least one question.';
+        'Please fill out all required fields.';
       return;
     }
 

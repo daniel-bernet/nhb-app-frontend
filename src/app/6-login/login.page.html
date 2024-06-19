@@ -1,18 +1,15 @@
 <ion-content [fullscreen]="true">
-  <ion-title>NHB-APP</ion-title>
+  <ion-title id="authTitle">NHB-APP</ion-title>
 
-  <div class="auth-container">
+  <div id="authContainer">
     <ion-header>Login</ion-header>
+
     <ion-input
       label="Email"
       label-placement="floating"
       fill="outline"
       placeholder="your@email.com"
       labelPlacement="floating"
-      helperText="Enter a valid email"
-      errorText="Invalid email"
-      ngModel
-      email
       [(ngModel)]="email"
     ></ion-input>
     <ion-input
@@ -23,11 +20,6 @@
       [(ngModel)]="password"
       type="password"
     >
-      <!--
-      <ion-button fill="clear" slot="end" aria-label="Show/hide">
-        <ion-icon slot="icon-only" name="eye-outline" aria-hidden="true"></ion-icon>
-      </ion-button>
-      -->
     </ion-input>
     <ion-button (click)=" login()">
       <ion-label>Login</ion-label>
@@ -36,7 +28,7 @@
     <ion-label color="danger">{{ errorMessage }}</ion-label>
     }
   </div>
-  <div>
+  <div id="linkContainer">
     <span>Don't have an account yet?</span>
     <a href="/register">Sign up</a>
   </div>

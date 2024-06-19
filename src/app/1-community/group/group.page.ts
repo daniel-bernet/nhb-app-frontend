@@ -192,7 +192,7 @@ export class GroupPage implements OnInit {
 
   async addGroupMember() {
     const searchAlert = await this.alertController.create({
-      header: 'Search for Group Members',
+      header: 'Search Users',
       inputs: [
         {
           name: 'searchText',
@@ -226,30 +226,47 @@ export class GroupPage implements OnInit {
   }
 
   async showAccountsList(accounts: any[]) {
+    const inputs: any =
+      accounts.length > 0
+        ? accounts.map((account) => ({
+            name: 'accounts',
+            type: 'radio',
+            label: `${account.FirstName} ${account.LastName} - ${account.Email}`,
+            value: account.AccountID,
+          }))
+        : [
+            {
+              name: 'noAccounts',
+              type: 'text',
+              value: 'No matching accounts found',
+              disabled: true,
+            },
+          ];
+
     const selectAlert = await this.alertController.create({
       header: 'Select an Account',
-      inputs: accounts.map((account) => ({
-        name: 'accounts',
-        type: 'radio',
-        label: `${account.FirstName} ${account.LastName} - ${account.Email}`,
-        value: account.AccountID,
-      })),
+      inputs: inputs,
       buttons: [
         {
           text: 'Cancel',
           role: 'cancel',
         },
-        {
-          text: 'Add',
-          handler: (accountId) => {
-            this.dataService
-              .addMemberToGroup(this.groupId!, accountId)
-              .subscribe({
-                next: () => console.log('Member added successfully'),
-                error: (error) => console.error('Error adding member:', error),
-              });
-          },
-        },
+        ...(accounts.length > 0
+          ? [
+              {
+                text: 'Add',
+                handler: (accountId: string) => {
+                  this.dataService
+                    .addMemberToGroup(this.groupId!, accountId)
+                    .subscribe({
+                      next: () => console.log('Member added successfully'),
+                      error: (error) =>
+                        console.error('Error adding member:', error),
+                    });
+                },
+              },
+            ]
+          : []),
       ],
     });
 

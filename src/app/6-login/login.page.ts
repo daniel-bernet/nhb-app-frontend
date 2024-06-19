@@ -38,8 +38,8 @@ import { Router } from '@angular/router';
   ],
 })
 export class LoginPage implements OnInit {
-  email: string = 'test@test.com'; // for easy dev, remove for production!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  password: string = 'Test1test';
+  email: string = '';
+  password: string = '';
   errorMessage?: string;
 
   constructor(

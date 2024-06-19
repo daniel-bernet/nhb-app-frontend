@@ -34,4 +34,135 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+// Login & Register Page:
+$font-stack: "Arial", sans-serif;
+
+ion-content {
+  ion-title {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+  ion-item-group {
+    ion-item {
+      --background: 0;
+      ion-icon {
+        margin-right: 20px;
+      }
+    }
+  }
+  ion-card {
+    margin: 10px;
+    margin-top: 15px;
+    border-radius: 8px;
+  }
+  ion-card-subtitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  ion-fab {
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+  ion-list {
+    padding: none;
+  }
+  .list-md {
+    padding: 0;
+  }
+  --ion-item-background: none;
+  app-responsive-indicator {
+    margin-top: 10px;
+  }
+}
+
+#authContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  margin: auto;
+  max-width: 400px;
+  border-radius: 8px;
+  background: var(--ion-color-step-50);
+  box-shadow: var(--ion-shadow-elevation-2);
+
+  ion-button {
+    width: 100%;
+    margin-top: 10%;
+  }
+
+  ion-header {
+    margin-bottom: 10px;
+  }
+}
+
+#linkContainer {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  span,
+  a {
+    font-size: 16px;
+  }
+  a {
+    margin-left: 5%;
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    font-weight: bold;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.selectContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-wrap: nowrap;
+  align-items: center;
+  border-color: var(
+    --ion-color-step-300,
+    var(--ion-background-color-step-300, #b3b3b3)
+  );
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+}
+
+.multiButtonContainer {
+  align-self: center;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  margin: 15px;
+  gap: 10%;
+  ion-button {
+    width: 100%;
+  }
+}
+
+.questionDateContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}

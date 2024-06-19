@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
-  <ion-title>NHB-APP</ion-title>
+  <ion-title id="authTitle">NHB-APP</ion-title>
 
-  <div class="auth-container">
+  <div id="authContainer">
     <ion-header>Register</ion-header>
     <ion-input
       label="First Name"
@@ -26,10 +26,6 @@
       placeholder="your@email.com"
       labelPlacement="floating"
       type="email"
-      helperText="Enter a valid email"
-      errorText="Invalid email"
-      ngModel
-      email
       [(ngModel)]="email"
     ></ion-input>
     <ion-input
@@ -38,17 +34,17 @@
       fill="outline"
       placeholder="password"
       type="password"
-      helperText="Min 8 characters, 1 lower- and upper-case letter and 1 number!"
       errorText="Invalid password"
       [(ngModel)]="password"
       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"
-    ></ion-input>
-    <ion-input
+      ></ion-input>
+      <ion-input
       label="Confirm Password"
       label-placement="floating"
       fill="outline"
       placeholder="password"
       type="password"
+      helperText="Min 8 char, min 1 lower- /upper-case and 1 number!"
       errorText="Invalid password"
       [(ngModel)]="passwordConfirm"
       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"
@@ -57,7 +53,7 @@
       <ion-label>Register</ion-label>
     </ion-button>
   </div>
-  <div>
+  <div id="linkContainer">
     <span>Already have an account?</span>
     <a href="/login">Login</a>
   </div>
