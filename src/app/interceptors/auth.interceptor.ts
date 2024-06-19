@@ -16,10 +16,11 @@ export const authInterceptor: HttpInterceptorFn = (
 ): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const authenticationUrl = `${authService.getApiDomain()}/account/authenticate`;
 
   return next(req).pipe(
     catchError((error: any) => {
-      if (error.status === 401 && !req.url.includes('/account/login')) {
+      if (error.status === 401 && req.url !== authenticationUrl) {
         return authService.authenticateJWT().pipe(
           switchMap((response) => {
             if (response.isAuthenticated) {
@@ -31,7 +32,9 @@ export const authInterceptor: HttpInterceptorFn = (
               return next(modifiedReq);
             } else {
               authService.voidJWT();
-              router.navigateByUrl('/login');
+              if (!router.url.includes('/login')) {
+                router.navigateByUrl('/login');
+              }
               return throwError(
                 () => new Error('Session expired, please login again')
               );

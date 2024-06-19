@@ -77,6 +77,10 @@ export class CommunityPage implements OnInit {
     this.groups$ = await this.dataService.getGroups();
   }
 
+  async ionViewDidEnter() {
+    this.groups$ = await this.dataService.getGroups();
+  }
+
   openGroup(group: any) {
     let navigationExtras: NavigationExtras = {
       state: {

@@ -111,4 +111,8 @@ export class AuthService {
       value: jwt,
     });
   }
+
+  getApiDomain(): string {
+    return this.api_domain;
+  }
 }
