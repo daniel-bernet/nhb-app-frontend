@@ -10,7 +10,7 @@ import { Preferences } from '@capacitor/preferences';
 export class AuthService {
   constructor(private httpClient: HttpClient) {}
 
-  private api_domain: string = 'http://localhost:9001';
+  private api_domain: string = 'https://nhb-app.dbernet.ch';
   private jwt_token?: string;
 
   login(email: string, password: string): Observable<any> {

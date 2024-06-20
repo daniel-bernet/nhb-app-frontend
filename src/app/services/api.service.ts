@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class ApiService {
-  private api_domain: string = 'http://localhost:9001';
+  private api_domain: string = 'https://nhb-app.dbernet.ch';
 
   constructor(
     private httpClient: HttpClient,
