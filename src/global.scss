@@ -109,11 +109,8 @@ ion-content {
 }
 
 #linkContainer {
-  position: absolute;
-  bottom: 15%;
-  left: 0;
-  right: 0;
   text-align: center;
+  margin-top: 60px;
   span,
   a {
     font-size: 16px;
@@ -165,4 +162,8 @@ ion-content {
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.header-md {
+  box-shadow: none;
 }

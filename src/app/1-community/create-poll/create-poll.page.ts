@@ -11,7 +11,11 @@ import {
   IonButton,
   IonSelect,
   IonSelectOption,
-  IonInput, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/angular/standalone';
+  IonInput,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+} from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 
@@ -20,7 +24,10 @@ import { DataService } from 'src/app/services/data.service';
   templateUrl: './create-poll.page.html',
   styleUrls: ['./create-poll.page.scss'],
   standalone: true,
-  imports: [IonCardContent, IonCardTitle, IonCardHeader, 
+  imports: [
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
     IonButton,
     IonLabel,
     IonCard,
@@ -58,7 +65,7 @@ export class CreatePollPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
-    private location : Location
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -130,9 +137,23 @@ export class CreatePollPage implements OnInit {
       !this.pollDescription ||
       this.questions.length === 0
     ) {
-      this.errorMessage =
-        'Please fill out all required fields.';
+      this.errorMessage = 'Please fill out all required fields.';
       return;
+    }
+
+    for (const question of this.questions) {
+      if (
+        question.questionText === '' ||
+        !question.date ||
+        !question.duration ||
+        question.description === ''
+      ) {
+        this.errorMessage = 'Please fill out all Question fields.';
+        return;
+      } else if (question.options.length < 1) {
+        this.errorMessage = 'Can\'t create Questions withou options';
+        return;
+      }
     }
 
     this.dataService

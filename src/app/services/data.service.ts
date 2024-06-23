@@ -31,13 +31,6 @@ export class DataService {
     return this.userInformation.asObservable();
   }
 
-  getSentiments(): Observable<any[]> {
-    if (this.sentiments.getValue().length === 0) {
-      this.fetchSentiments();
-    }
-    return this.sentiments.asObservable();
-  }
-
   getTypes(): Observable<any[]> {
     if (this.types.getValue().length === 0) {
       this.fetchTypes();
@@ -50,13 +43,6 @@ export class DataService {
       next: (data) => this.userInformation.next(data),
       error: (error) =>
         console.error('Failed to fetch user information', error),
-    });
-  }
-
-  private fetchSentiments() {
-    this.apiService.getSentiments().subscribe({
-      next: (data) => this.sentiments.next(data),
-      error: (error) => console.error('Failed to fetch sentiments', error),
     });
   }
 

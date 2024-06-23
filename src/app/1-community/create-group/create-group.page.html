@@ -5,29 +5,36 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-input
-    label="Group Name"
-    label-placement="floating"
-    fill="outline"
-    placeholder="Title"
-    [(ngModel)]="groupName"
-  ></ion-input>
-  <ion-input
-    label="Group Association (Hardcoded as NoHeadBand)"
-    label-placement="floating"
-    fill="outline"
-    placeholder="NoHeadBand"
-    [disabled]="true"
-  ></ion-input>
-  <ion-input
-    label="Group Description"
-    label-placement="floating"
-    fill="outline"
-    placeholder="Description"
-    [(ngModel)]="groupDescription"
-  ></ion-input>
+  <div id="authContainer">
+    <ion-input
+      label="Group Name"
+      label-placement="floating"
+      fill="outline"
+      placeholder="Title"
+      [(ngModel)]="groupName"
+    ></ion-input>
+    <ion-input
+      label="Group Association (Hardcoded NoHeadBand)"
+      label-placement="floating"
+      fill="outline"
+      placeholder="NoHeadBand"
+      [disabled]="true"
+    ></ion-input>
+    <ion-input
+      label="Group Description"
+      label-placement="floating"
+      fill="outline"
+      placeholder="Description"
+      [(ngModel)]="groupDescription"
+    ></ion-input>
+  </div>
 
   <ion-list>
+    @if (groupMembers?.length !== 0) {
+      <ion-item-divider>
+        <ion-label> Group Members </ion-label>
+      </ion-item-divider>
+    }
     @for (groupMember of groupMembers; track groupMembers) {
     <ion-item>
       <ion-icon name="person-circle-outline" slot="start"></ion-icon>
@@ -42,14 +49,16 @@
       ></ion-icon>
     </ion-item>
     }
+  </ion-list>
+  
+  <div class="multiButtonContainer">
     <ion-button (click)=" addGroupMember()">
       <ion-label>Add Group Member</ion-label>
     </ion-button>
-  </ion-list>
-
-  <ion-button (click)=" createGroup()">
-    <ion-label>Create Group</ion-label>
-  </ion-button>
+    <ion-button (click)=" createGroup()">
+      <ion-label>Create Group</ion-label>
+    </ion-button>
+  </div>
 
   @if (errorMessage) {
   <ion-label color="danger">{{ errorMessage }}</ion-label>

@@ -12,8 +12,7 @@ import {
   IonItem,
   IonIcon,
   IonButton,
-  AlertController,
-} from '@ionic/angular/standalone';
+  AlertController, IonItemDivider } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { FormatService } from 'src/app/services/format.service';
@@ -25,7 +24,7 @@ import { addIcons } from 'ionicons';
   templateUrl: './create-group.page.html',
   styleUrls: ['./create-group.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonItemDivider, 
     IonButton,
     IonIcon,
     IonItem,

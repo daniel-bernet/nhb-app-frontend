@@ -74,12 +74,6 @@ export class ApiService {
     return this.httpClient.get<any>(url, { headers });
   }
 
-  getSentiments(): Observable<any[]> {
-    const url = `${this.api_domain}/sentiment/get-sentiments`;
-    const headers = this.createAuthHeaders();
-    return this.httpClient.get<any[]>(url, { headers });
-  }
-
   getTypes(): Observable<any[]> {
     const url = `${this.api_domain}/type/get-types`;
     const headers = this.createAuthHeaders();
