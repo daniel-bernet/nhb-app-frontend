@@ -1,0 +1,8 @@
+/node_modules
+/www
+/.vscode
+/.angular
+npm-debug.log
+.DS_Store
+.git
+.gitignore

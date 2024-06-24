@@ -6,7 +6,10 @@ This repository contains the frontend of my mod-164 school project about a mobil
 
 ## Deployment
 
-Maybe dockerise and run from server to ease access to project?
+The frontend Web-Application is hosted on my linux home server using a docker container. The website and docker hub repository can be accessed using the following links.
+
+- [NHB Web Application](https://nhb-app-m164.dbernet.ch/)
+- [NHB Frontend Dockerhub Repository](https://hub.docker.com/r/maknis3/nhb-app-frontend)
 
 ## Browser Setup Locally
 
@@ -40,7 +43,7 @@ npm install
 Finally the frontend can be run locally in a web browser using the following command.
 
 ```shell
-ionic serve
+npm start
 ```
 
 Make use of the `dev-tools` and `dimensions` selection to simulate an actual mobile device.
