@@ -99,8 +99,8 @@ export class ApiService {
     return this.httpClient.post<any>(url, body, { headers });
   }
 
-  getGroupFeed(groupId: string, start: number = 0): Observable<any> {
-    const url = `${this.api_domain}/group/get-feed/${groupId}?start=${start}`;
+  getGroupFeed(groupId: string): Observable<any> {
+    const url = `${this.api_domain}/group/get-feed/${groupId}`;
     const headers = this.createAuthHeaders();
 
     return this.httpClient.get<any>(url, { headers });

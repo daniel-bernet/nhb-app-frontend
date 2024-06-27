@@ -33,7 +33,7 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import { FormatService } from 'src/app/services/format.service';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, filter, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-group',
@@ -92,7 +92,9 @@ export class GroupPage implements OnInit {
         this.groupId =
           this.router.getCurrentNavigation()?.extras.state?.['groupId'];
         this.group$ = this.dataService.getGroup(this.groupId!);
-        this.feedItems$ = this.dataService.getGroupFeed(this.groupId!);
+        this.feedItems$ = this.dataService
+          .getGroupFeed(this.groupId!)
+          .pipe(filter((feed) => !!feed));
       }
     });
   }
@@ -148,8 +150,13 @@ export class GroupPage implements OnInit {
   }
 
   answerOverview(questions: any[]): string {
+    if (!questions || questions.length === 0) {
+      return 'No answers yet';
+    }
+
     var answerCount = 0;
     const memberCount = questions[0].answers.length;
+
     for (let i = 0; i < memberCount; i++) {
       var answeredAllQuestions = true;
       questions.forEach(function (question) {

@@ -16,7 +16,6 @@ import { ApiService } from './api.service';
 })
 export class DataService {
   private userInformation = new BehaviorSubject<any>(null);
-  private sentiments = new BehaviorSubject<any[]>([]);
   private types = new BehaviorSubject<any[]>([]);
   private groups = new BehaviorSubject<any[]>([]);
   private groupFeeds = new Map<string, BehaviorSubject<any[]>>();
@@ -104,7 +103,6 @@ export class DataService {
 
     this.apiService.getGroupFeed(groupId).subscribe({
       next: (data) => {
-        console.log('fetched group feed delivered from API: ', data);
         const updatedFeed = data.data;
         feed!.next(updatedFeed);
       },
